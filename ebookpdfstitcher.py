@@ -21,6 +21,7 @@ def stitch_pdfs(input_folder, output_filename):
                 page = pdf_reader._get_page(page_num)  # Use get_page method to access pages
                 pdf_writer.add_page(page)
 
+
     # Save the combined PDF to a new file
     with open(output_filename, 'wb') as output_file:
         pdf_writer.write(output_file)
