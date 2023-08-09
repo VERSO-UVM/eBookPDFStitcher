@@ -1,6 +1,7 @@
-import PyPDF2
+import pypdf as pypdf
 import tkinter as tk
 from tkinter import filedialog
+import os
 
 def combine_pdfs():
     input_folder = filedialog.askdirectory(title="Select the folder with the PDFs")
@@ -16,14 +17,14 @@ def combine_pdfs():
     pdf_files = [file for file in os.listdir(input_folder) if file.endswith('.pdf')]
     pdf_files.sort()
 
-    pdf_writer = PyPDF2.PdfWriter()
+    pdf_writer = pypdf.PdfWriter()
 
     for pdf_file in pdf_files:
         with open(os.path.join(input_folder, pdf_file), 'rb') as file:
-            pdf_reader = PyPDF2.PdfFileReader(file)
-            for page_num in range(pdf_reader.numPages):
-                page = pdf_reader.getPage(page_num)
-                pdf_writer.addPage(page)
+            pdf_reader = pypdf.PdfReader(file)
+            for page_num in range(len(pdf_reader.pages)):
+                page = pdf_reader.pages[page_num]
+                pdf_writer.add_page(page)
 
     with open(output_file, 'wb') as output_file:
         pdf_writer.write(output_file)
