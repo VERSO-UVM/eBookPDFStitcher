@@ -25,10 +25,10 @@ pip install PyPDF2
 
 ## Answered FAQ
 Do the books tend to stick to a similar layout, or does it vary from one book to another? For instance, do they typically include elements like title pages and page numbers in consistent locations, or is it more diverse?
-Layouts vary some, but almost all books will have a title page and page numbers in consistent locations.
+*Layouts vary some, but almost all books will have a title page and page numbers in consistent locations.*
 
 Do the dimensions of the pdfs often vary between chapters (so from a letter to a legal size) in a set of scans?
-All books are consistent chapter to chapter.
+*All books are consistent chapter to chapter.*
 
 Is there a max number of individual PDF chapters for a given book the tool will need to handle and merge?
-Rare to see an academic book with more than 50 chapters
+*Rare to see an academic book with more than 50 chapters*
