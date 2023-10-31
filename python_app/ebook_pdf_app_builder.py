@@ -45,10 +45,15 @@ def main():
     # Create a root window for the GUI
     root = tk.Tk()
     root.title("PDF Combiner")  # Set the title of the window
+    root.config(bg="green")
+    root.minsize(200, 200)
+
+    app_frame = tk.Frame(root, width=200, height=200)
+    
 
     # Create a button to run the PDF combiner function
     run_button = tk.Button(root, text="Run PDF Combiner", command=combine_pdfs)
-    run_button.pack(pady=20)  # Add padding to the button
+    run_button.pack(pady=110)  # Add padding to the button
 
     root.mainloop()  # Start the GUI event loop
 
