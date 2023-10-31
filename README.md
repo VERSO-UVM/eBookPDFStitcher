@@ -9,10 +9,10 @@ The first version is a simple python script that has a basic user interface whic
 ## Example PDfs
 Youi can find in the UVM Library catalog by searching “JSTOR Books”, for example:
 
-https://www.jstor.org/stable/j.ctt7zsx4h (included as Book 1)
-https://www.jstor.org/stable/j.ctt3fhx5m (included as Book 2)
-https://www.jstor.org/stable/j.ctt2jcq33
-https://www.jstor.org/stable/j.ctt4cgmp0
+* [https://www.jstor.org/stable/j.ctt7zsx4h](https://www.jstor.org/stable/j.ctt2jcq33) (included as Book 1)
+* [https://www.jstor.org/stable/j.ctt3fhx5m](https://www.jstor.org/stable/j.ctt2jcq33) (included as Book 2)
+* [https://www.jstor.org/stable/j.ctt2jcq33](https://www.jstor.org/stable/j.ctt2jcq33)
+* [https://www.jstor.org/stable/j.ctt4cgmp0](https://www.jstor.org/stable/j.ctt4cgmp0)
  
 ## Known Complications
 - It is not clear how often the chapters have a numeric numbers that allows automatic ordering to happen. Most likely there needs to be a way to put the files in order
