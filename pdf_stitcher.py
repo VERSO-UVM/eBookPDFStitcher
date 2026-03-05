@@ -48,9 +48,9 @@ def renumber_pdf(input_pdf, output_pdf):
     pdf_doc = fitz.open(input_pdf)
 
     # Loop through each page in the PDF file
-    for page_num in range(len(pdf_doc)):
-        # Renumber the page
-        pdf_doc[page_num].get_text("Page {}".format(page_num + 1))
+    # for page_num in range(len(pdf_doc)):
+    #     # Renumber the page
+    #     pdf_doc[page_num].get_text("Page {}".format(page_num + 1))
 
     # Save the renumbered PDF file
     pdf_doc.save(output_pdf)
@@ -75,10 +75,10 @@ def delete_pages(input_pdf, pages_to_delete, output_pdf):
 
 
     # Loop through each page in the PDF file
-    for page_num in range(pdf_reader.getNumPages()):
+    for page_num in range(len(pdf_reader.pages)):
         # If the page is not in the list of pages to delete, add it to the PdfWriter object
         if page_num not in pages_to_delete:
-            pdf_writer.add_page(pdf_reader.getPage(page_num))
+            pdf_writer.add_page(pdf_reader.pages[page_num])
 
     # Write the remaining pages to the output file
     with open(output_pdf, "wb") as output:
