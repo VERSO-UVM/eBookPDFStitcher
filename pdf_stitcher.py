@@ -1,4 +1,4 @@
-import PySimpleGUI as sg
+import FreeSimpleGUI as sg
 from PyPDF2 import PdfReader, PdfWriter, PdfFileReader
 import fitz
 import os
