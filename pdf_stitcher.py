@@ -48,7 +48,7 @@ def renumber_pdf(input_pdf, output_pdf):
     pdf_doc = fitz.open(input_pdf)
 
     # Loop through each page in the PDF file
-    # for page_num in range(1, len(pdf_doc)):
+    # for page_num in range(len(pdf_doc)):
     #     x = (pdf_doc[page_num].get_text())
     #     # Renumber the page
     #     pdf_doc[page_num].get_text("Page {}".format(page_num + 1))
@@ -256,6 +256,7 @@ def main():
     # Delete specified pages from the renumbered PDF file and show a confirmation pop-up
     delete_pages(merged_pdf, pages_to_delete, final_output_pdf)
     sg.popup("Pages deleted!", f"Output saved as '{document_name}.pdf' in {output_folder}")
+
 
 # Open and close the file using a with statement
     with fitz.open(merged_pdf) as pdf:
