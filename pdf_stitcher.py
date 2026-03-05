@@ -48,9 +48,14 @@ def renumber_pdf(input_pdf, output_pdf):
     pdf_doc = fitz.open(input_pdf)
 
     # Loop through each page in the PDF file
-    # for page_num in range(len(pdf_doc)):
-    #     # Renumber the page
-    #     pdf_doc[page_num].get_text("Page {}".format(page_num + 1))
+    for page_num in range(len(pdf_doc)):
+        #Find the page to be renumbered 
+        page = pdf_doc[page_num]
+        #Since Python is 0 indexed, as to start as page 0 + 1
+        text = f"Page {page_num + 1}"
+        text_coords = (page.rect.width - 75, page.rect.height - 30)
+        page.insert_text(text_coords, text)
+        #pdf_doc[page_num].get_text("Page {}".format(page_num + 1))
 
     # Save the renumbered PDF file
     pdf_doc.save(output_pdf)
