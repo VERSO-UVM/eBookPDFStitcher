@@ -155,7 +155,7 @@ def show_preview(pdf_file, output_folder, document_name):
     # Define the layout of the preview window
     layout = [
         [sg.Image(filename=temp_filenames[0], key="-IMAGE-")],
-        [sg.Text(f"Page 1 of {total_pages}", key="-PAGE-")],
+        [sg.Text(f"Page 0 of {total_pages}", key="-PAGE-")],
         [sg.Text("Pages to delete (comma-separated):"), sg.InputText(key="-PAGES-")],
         [sg.Button("Delete Pages"), sg.Button("Save Pages"), sg.Button("Exit")],
     ]
@@ -180,7 +180,7 @@ def show_preview(pdf_file, output_folder, document_name):
             if invalid_pages:
                 sg.popup_error(f"Invalid page(s): {', '.join(invalid_pages)}")
                 continue
-
+                    
             pages_to_delete = [int(page) for page in pages_to_delete]
             
             if pages_to_delete:
@@ -253,27 +253,27 @@ def main():
     # Merge the selected PDF files into a single PDF file
     merge_pdfs(pdf_files, merged_pdf)
     
-    # Define the path for the renumbered PDF file
-    renumbered_pdf = os.path.join(temp_dir, "renumbered.pdf")
+    # # Define the path for the renumbered PDF file
+    # renumbered_pdf = os.path.join(temp_dir, "renumbered.pdf")
 
-    # Renumber the pages of the merged PDF file
-    renumber_pdf(merged_pdf, renumbered_pdf)
+    # # # Renumber the pages of the merged PDF file
+    # renumber_pdf(merged_pdf, renumbered_pdf)
     
     # Initialize an empty list for pages to delete
     pages_to_delete = []
 
     # Show a preview of the renumbered PDF file and allow users to delete or save pages
-    show_preview(renumbered_pdf, output_folder, document_name)
+    show_preview(merged_pdf, output_folder, document_name)
 
     # Define the final output path for the PDF file after deletion
     final_output_pdf = os.path.join(output_folder, f"{document_name}.pdf")
     
     # Delete specified pages from the renumbered PDF file and show a confirmation pop-up
-    delete_pages(renumbered_pdf, pages_to_delete, final_output_pdf)
+    delete_pages(merged_pdf, pages_to_delete, final_output_pdf)
     sg.popup("Pages deleted!", f"Output saved as '{document_name}.pdf' in {output_folder}")
 
 # Open and close the file using a with statement
-    with fitz.open(renumbered_pdf) as pdf:
+    with fitz.open(merged_pdf) as pdf:
         pass  # Do nothing, just open and close the file 
 
     # Remove the temporary directory and its contents
