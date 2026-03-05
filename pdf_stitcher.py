@@ -48,9 +48,10 @@ def renumber_pdf(input_pdf, output_pdf):
     pdf_doc = fitz.open(input_pdf)
 
     # Loop through each page in the PDF file
-    for page_num in range(len(pdf_doc)):
-        # Renumber the page
-        pdf_doc[page_num].get_text("Page {}".format(page_num + 1))
+    # for page_num in range(1, len(pdf_doc)):
+    #     x = (pdf_doc[page_num].get_text())
+    #     # Renumber the page
+    #     pdf_doc[page_num].get_text("Page {}".format(page_num + 1))
 
     # Save the renumbered PDF file
     pdf_doc.save(output_pdf)
@@ -115,10 +116,10 @@ def save_remaining_pages(pdf_files, output_pdf, pages_to_save):
     with open(output_pdf, 'wb') as output:
         pdf_writer.write(output)
 
-# This function displays a preview of the PDF file with options to delete or save pages
+# This function displays a preview of the PDF file with options to delete pages and save the document
 def show_preview(pdf_file, output_folder, document_name):
     """
-    Display a preview of the PDF with options to delete or save pages.
+    Display a preview of the PDF with options to delete pages or save the document.
 
     Parameters:
     - pdf_file (str): The path to the input PDF file.
@@ -130,7 +131,7 @@ def show_preview(pdf_file, output_folder, document_name):
     def update_preview(window, current_page, temp_filenames, total_pages):
        # Update the image and page number
        window["-IMAGE-"].update(filename=temp_filenames[current_page])
-       window["-PAGE-"].update(f"Page {current_page + 1} of {total_pages}")
+       window["-PAGE-"].update(f"Page {current_page} of {total_pages}")
     
     # Open the PDF file and get the total number of pages
     pdf_doc = fitz.open(pdf_file)
@@ -150,9 +151,9 @@ def show_preview(pdf_file, output_folder, document_name):
     # Define the layout of the preview window
     layout = [
         [sg.Image(filename=temp_filenames[0], key="-IMAGE-")],
-        [sg.Text(f"Page 1 of {total_pages}", key="-PAGE-")],
+        [sg.Text(f"Page 0 of {total_pages}", key="-PAGE-")],
         [sg.Text("Pages to delete (comma-separated):"), sg.InputText(key="-PAGES-")],
-        [sg.Button("Delete Pages"), sg.Button("Save Pages"), sg.Button("Exit")],
+        [sg.Button("Delete Pages"), sg.Button("Save and Exit")],
     ]
 
     # Create the preview window
@@ -165,7 +166,7 @@ def show_preview(pdf_file, output_folder, document_name):
     while True:
         event, values = window.read()
 
-        if event == sg.WINDOW_CLOSED or event == "Exit":
+        if event == sg.WINDOW_CLOSED or event == "Save and Exit":
             break
 
         if event == "Delete Pages":
@@ -175,7 +176,7 @@ def show_preview(pdf_file, output_folder, document_name):
             if invalid_pages:
                 sg.popup_error(f"Invalid page(s): {', '.join(invalid_pages)}")
                 continue
-
+                    
             pages_to_delete = [int(page) for page in pages_to_delete]
             
             if pages_to_delete:
@@ -202,18 +203,7 @@ def show_preview(pdf_file, output_folder, document_name):
             img_data = sg.Image(filename=temp_filenames[current_page])
             # canvas.draw_image(data=img_data, location=(0, 600))
 
-        elif event == "Save Pages":
-            save_pages = [int(page.strip()) for page in values["-PAGES-"].split(",") if page.strip()]
-            
-            if save_pages:
-                remaining_pdf = os.path.join(output_folder, f"{document_name}.pdf")
-                save_remaining_pages(pdf_file, remaining_pdf, save_pages)
-                sg.popup("Remaining pages saved!", f"Output saved as 'remaining.pdf' in {output_folder}")
-
     window.close()
-
-    # Remove the temporary directory and its contents
-    shutil.rmtree(temp_dir)
 
 def main():
     # Get user input for the document name using a pop-up dialog
@@ -248,27 +238,27 @@ def main():
     # Merge the selected PDF files into a single PDF file
     merge_pdfs(pdf_files, merged_pdf)
     
-    # Define the path for the renumbered PDF file
-    renumbered_pdf = os.path.join(temp_dir, "renumbered.pdf")
+    # # Define the path for the renumbered PDF file
+    # renumbered_pdf = os.path.join(temp_dir, "renumbered.pdf")
 
-    # Renumber the pages of the merged PDF file
-    renumber_pdf(merged_pdf, renumbered_pdf)
+    # # # Renumber the pages of the merged PDF file
+    # renumber_pdf(merged_pdf, renumbered_pdf)
     
     # Initialize an empty list for pages to delete
     pages_to_delete = []
 
     # Show a preview of the renumbered PDF file and allow users to delete or save pages
-    show_preview(renumbered_pdf, output_folder, document_name)
+    show_preview(merged_pdf, output_folder, document_name)
 
     # Define the final output path for the PDF file after deletion
     final_output_pdf = os.path.join(output_folder, f"{document_name}.pdf")
     
     # Delete specified pages from the renumbered PDF file and show a confirmation pop-up
-    delete_pages(renumbered_pdf, pages_to_delete, final_output_pdf)
+    delete_pages(merged_pdf, pages_to_delete, final_output_pdf)
     sg.popup("Pages deleted!", f"Output saved as '{document_name}.pdf' in {output_folder}")
 
 # Open and close the file using a with statement
-    with fitz.open(renumbered_pdf) as pdf:
+    with fitz.open(merged_pdf) as pdf:
         pass  # Do nothing, just open and close the file 
 
     # Remove the temporary directory and its contents
