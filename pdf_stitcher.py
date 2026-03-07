@@ -161,7 +161,7 @@ def show_preview(pdf_file, output_folder, document_name):
     ]
 
     # Create the preview window
-    window = sg.Window("PDF Merger Preview", layout, finalize=True)
+    window = sg.Window("PDF Merger Preview", layout, size = (800,600), finalize=True)
 
     # Initialize the current page
     current_page = 0
@@ -221,6 +221,9 @@ def show_preview(pdf_file, output_folder, document_name):
     shutil.rmtree(temp_dir)
 
 def main():
+
+    forbiden_input = ('\\','/',':','*','?','"','<','>','|')
+    
     # Get user input for the document name using a pop-up dialog
     document_name = sg.popup_get_text("Enter document name:")
 
@@ -228,6 +231,13 @@ def main():
     if not document_name:
         sg.popup("Document name cannot be empty. Exiting.")
         return
+    
+
+    if any(char in document_name for char in forbiden_input):
+        sg.popup('You are not allowed to use \\,/,:,*,?,",<,>,|. Exiting')
+        return
+    if len(document_name)>= 255:
+        sg.popup("Your document will likely be more than the allowed filepath lenght. Exiting")
     
     # Get a list of PDF files to merge using a pop-up dialog
     pdf_files = sg.popup_get_file("Select PDF files to merge", multiple_files=True, file_types=(("PDF Files", "*.pdf"),))
@@ -254,10 +264,10 @@ def main():
     merge_pdfs(pdf_files, merged_pdf)
     
     # # Define the path for the renumbered PDF file
-    # renumbered_pdf = os.path.join(temp_dir, "renumbered.pdf")
+    renumbered_pdf = os.path.join(temp_dir, "renumbered.pdf")
 
     # # # Renumber the pages of the merged PDF file
-    # renumber_pdf(merged_pdf, renumbered_pdf)
+    renumber_pdf(merged_pdf, renumbered_pdf)
     
     # Initialize an empty list for pages to delete
     pages_to_delete = []
