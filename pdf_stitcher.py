@@ -236,8 +236,7 @@ def main():
     if any(char in document_name for char in forbiden_input):
         sg.popup('You are not allowed to use \\,/,:,*,?,",<,>,|. Exiting')
         return
-    if len(document_name)>= 255:
-        sg.popup("Your document will likely be more than the allowed filepath lenght. Exiting")
+   
     
     # Get a list of PDF files to merge using a pop-up dialog
     pdf_files = sg.popup_get_file("Select PDF files to merge", multiple_files=True, file_types=(("PDF Files", "*.pdf"),))
