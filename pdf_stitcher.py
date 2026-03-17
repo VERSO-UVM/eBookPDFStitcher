@@ -120,6 +120,8 @@ def save_remaining_pages(pdf_files, output_pdf, pages_to_save):
     with open(output_pdf, 'wb') as output:
         pdf_writer.write(output)
 
+# TODO: Fix this eventually so users can visualize pages before saving
+        # but the core functionality works without it
 # This function displays a preview of the PDF file with options to delete or save pages
 def show_preview(pdf_file, output_folder, document_name):
     """
@@ -134,7 +136,7 @@ def show_preview(pdf_file, output_folder, document_name):
     # This function updates the preview window
     def update_preview(window, current_page, temp_filenames, total_pages):
         # Update the image and page number
-        window["-IMAGE-"].update(filename=temp_filenames[current_page])
+        window["-IMAGE-"].update(filename=temp_filenames[current_page], size=(400,400))
         window["-PAGE-"].update(f"Page {current_page + 1} of {total_pages}")
     
     # Open the PDF file and get the total number of pages
@@ -272,7 +274,7 @@ def main():
     pages_to_delete = []
 
     # Show a preview of the renumbered PDF file and allow users to delete or save pages
-    show_preview(renumbered_pdf, output_folder, document_name)
+    # show_preview(renumbered_pdf, output_folder, document_name)
 
     # Define the final output path for the PDF file after deletion
     final_output_pdf = os.path.join(output_folder, f"{document_name}.pdf")
