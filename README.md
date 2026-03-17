@@ -23,9 +23,9 @@ pdf_files contain sample pdfs for testing scripts
 
 **Install dependencies**
 You will need to install the following Python Packages
-* FreeSimpleGUI
+* PySimpleGUI
 * PyPDF2 
-* pymupdf
+* fitz
 * os
 * tempfile
 * shutil
