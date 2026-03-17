@@ -154,7 +154,7 @@ def show_preview(pdf_file, output_folder, document_name):
 
     # Define the layout of the preview window
     layout = [
-        [sg.Image(filename=temp_filenames[0], key="-IMAGE-")],
+        [sg.Image(filename=temp_filenames[0], key="-IMAGE-", size=(400,400))],
         [sg.Text(f"Page 0 of {total_pages}", key="-PAGE-")],
         [sg.Text("Pages to delete (comma-separated):"), sg.InputText(key="-PAGES-")],
         [sg.Button("Delete Pages"), sg.Button("Save Pages"), sg.Button("Exit")],
