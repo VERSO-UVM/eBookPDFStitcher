@@ -53,7 +53,7 @@ def renumber_pdf(input_pdf, output_pdf):
         page = pdf_doc[page_num]
         #Since Python is 0 indexed, as to start as page 0 + 1
         text = f"Page {page_num + 1}"
-        text_coords = (page.rect.width - 75, page.rect.height - 30)
+        text_coords = (0, page.rect.height - 30)
         page.insert_text(text_coords, text)
         #pdf_doc[page_num].get_text("Page {}".format(page_num + 1))
 
@@ -133,9 +133,9 @@ def show_preview(pdf_file, output_folder, document_name):
     """
     # This function updates the preview window
     def update_preview(window, current_page, temp_filenames, total_pages):
-       # Update the image and page number
-       window["-IMAGE-"].update(filename=temp_filenames[current_page])
-       window["-PAGE-"].update(f"Page {current_page + 1} of {total_pages}")
+        # Update the image and page number
+        window["-IMAGE-"].update(filename=temp_filenames[current_page])
+        window["-PAGE-"].update(f"Page {current_page + 1} of {total_pages}")
     
     # Open the PDF file and get the total number of pages
     pdf_doc = fitz.open(pdf_file)
