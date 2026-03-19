@@ -1,4 +1,5 @@
-import PySimpleGUI as sg
+<<<<<<< HEAD
+import FreeSimpleGUI as sg
 from PyPDF2 import PdfReader, PdfWriter, PdfFileReader
 import fitz
 import os
@@ -49,8 +50,13 @@ def renumber_pdf(input_pdf, output_pdf):
 
     # Loop through each page in the PDF file
     for page_num in range(len(pdf_doc)):
-        # Renumber the page
-        pdf_doc[page_num].get_text("Page {}".format(page_num + 1))
+        #Find the page to be renumbered 
+        page = pdf_doc[page_num]
+        #Since Python is 0 indexed, as to start as page 0 + 1
+        text = f"Page {page_num + 1}"
+        text_coords = (0, page.rect.height - 30)
+        page.insert_text(text_coords, text)
+        #pdf_doc[page_num].get_text("Page {}".format(page_num + 1))
 
     # Save the renumbered PDF file
     pdf_doc.save(output_pdf)
@@ -75,10 +81,10 @@ def delete_pages(input_pdf, pages_to_delete, output_pdf):
 
 
     # Loop through each page in the PDF file
-    for page_num in range(pdf_reader.getNumPages()):
+    for page_num in range(len(pdf_reader.pages)):
         # If the page is not in the list of pages to delete, add it to the PdfWriter object
         if page_num not in pages_to_delete:
-            pdf_writer.add_page(pdf_reader.getPage(page_num))
+            pdf_writer.add_page(pdf_reader.pages[page_num])
 
     # Write the remaining pages to the output file
     with open(output_pdf, "wb") as output:
@@ -115,6 +121,8 @@ def save_remaining_pages(pdf_files, output_pdf, pages_to_save):
     with open(output_pdf, 'wb') as output:
         pdf_writer.write(output)
 
+# TODO: Fix this eventually so users can visualize pages before saving
+        # but the core functionality works without it
 # This function displays a preview of the PDF file with options to delete or save pages
 def show_preview(pdf_file, output_folder, document_name):
     """
@@ -128,9 +136,9 @@ def show_preview(pdf_file, output_folder, document_name):
     """
     # This function updates the preview window
     def update_preview(window, current_page, temp_filenames, total_pages):
-       # Update the image and page number
-       window["-IMAGE-"].update(filename=temp_filenames[current_page])
-       window["-PAGE-"].update(f"Page {current_page + 1} of {total_pages}")
+        # Update the image and page number
+        window["-IMAGE-"].update(filename=temp_filenames[current_page], size=(400,400))
+        window["-PAGE-"].update(f"Page {current_page + 1} of {total_pages}")
     
     # Open the PDF file and get the total number of pages
     pdf_doc = fitz.open(pdf_file)
@@ -149,14 +157,14 @@ def show_preview(pdf_file, output_folder, document_name):
 
     # Define the layout of the preview window
     layout = [
-        [sg.Image(filename=temp_filenames[0], key="-IMAGE-")],
-        [sg.Text(f"Page 1 of {total_pages}", key="-PAGE-")],
+        [sg.Image(filename=temp_filenames[0], key="-IMAGE-", size=(400,400))],
+        [sg.Text(f"Page 0 of {total_pages}", key="-PAGE-")],
         [sg.Text("Pages to delete (comma-separated):"), sg.InputText(key="-PAGES-")],
         [sg.Button("Delete Pages"), sg.Button("Save Pages"), sg.Button("Exit")],
     ]
 
     # Create the preview window
-    window = sg.Window("PDF Merger Preview", layout, finalize=True)
+    window = sg.Window("PDF Merger Preview", layout, size = (800,600), finalize=True)
 
     # Initialize the current page
     current_page = 0
@@ -175,7 +183,7 @@ def show_preview(pdf_file, output_folder, document_name):
             if invalid_pages:
                 sg.popup_error(f"Invalid page(s): {', '.join(invalid_pages)}")
                 continue
-
+                    
             pages_to_delete = [int(page) for page in pages_to_delete]
             
             if pages_to_delete:
@@ -216,6 +224,9 @@ def show_preview(pdf_file, output_folder, document_name):
     shutil.rmtree(temp_dir)
 
 def main():
+
+    forbiden_input = ('\\','/',':','*','?','"','<','>','|')
+    
     # Get user input for the document name using a pop-up dialog
     document_name = sg.popup_get_text("Enter document name:")
 
@@ -223,6 +234,12 @@ def main():
     if not document_name:
         sg.popup("Document name cannot be empty. Exiting.")
         return
+    
+
+    if any(char in document_name for char in forbiden_input):
+        sg.popup('You are not allowed to use \\,/,:,*,?,",<,>,|. Exiting')
+        return
+   
     
     # Get a list of PDF files to merge using a pop-up dialog
     pdf_files = sg.popup_get_file("Select PDF files to merge", multiple_files=True, file_types=(("PDF Files", "*.pdf"),))
@@ -248,17 +265,17 @@ def main():
     # Merge the selected PDF files into a single PDF file
     merge_pdfs(pdf_files, merged_pdf)
     
-    # Define the path for the renumbered PDF file
+    # # Define the path for the renumbered PDF file
     renumbered_pdf = os.path.join(temp_dir, "renumbered.pdf")
 
-    # Renumber the pages of the merged PDF file
+    # # # Renumber the pages of the merged PDF file
     renumber_pdf(merged_pdf, renumbered_pdf)
     
     # Initialize an empty list for pages to delete
     pages_to_delete = []
 
     # Show a preview of the renumbered PDF file and allow users to delete or save pages
-    show_preview(renumbered_pdf, output_folder, document_name)
+    # show_preview(renumbered_pdf, output_folder, document_name)
 
     # Define the final output path for the PDF file after deletion
     final_output_pdf = os.path.join(output_folder, f"{document_name}.pdf")

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index Page</title>
+    <link rel="icon" href="/static/favicon/favicon.ico">
+    <link rel="stylesheet" href="/static/index.css">
+</head>
+
+<body>
+    <header>
+        <p> Pdf Stitcher</p>
+    </header>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" multiple accept=".pdf" required />
+        <button type="submit">Upload</button>
+    </form>
+</body>
+
+</html>
