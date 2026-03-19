@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, send_file
 
 app = Flask(__name__)
 
@@ -14,5 +14,11 @@ def upload():
         i.save(f"uploaded_files/{i.filename}")
     # go to the file settings page
     return render_template("file_settings.html")
+
+# @app.route("/name", method =["POST"])
+# def download_file(name):
+    
+
+
 
 
