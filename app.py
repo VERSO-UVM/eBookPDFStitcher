@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, send_file
+import pdf_engine
 import os
-import pdf_stitcher
 
 app = Flask(__name__)
 
