@@ -2,7 +2,6 @@
 from PyPDF2 import PdfReader, PdfWriter, PdfFileReader
 import fitz
 import os
-import tempfile
 import shutil
 
 # This function merges multiple PDF files into a single PDF file
@@ -119,4 +118,59 @@ def save_remaining_pages(pdf_files, output_pdf, pages_to_save):
     # Write the remaining pages to the oureaderput file
     with open(output_pdf, 'wb') as output:
         pdf_writer.write(output)
+        
+        
+def stitch_pdf(output_folder = "output", input_direcotry = "uploaded_files", document_name = None, pages_to_delete = [], remove_unstitched = False):
+    """Merges, renumbers, and optionally cleans up a collection of PDF files.
+    Parameters:
+        output_folder (str): Path to the directory where the final PDF will be
+            saved. Defaults to "output".
+        input_direcotry (str): Path to the directory containing the input PDF
+            files to stitch. Defaults to "uploaded_files".
+        document_name (str, optional): Base name for the output PDF file
+            (without extension). If None, defaults to "<n>_stitched" where
+            <n> is the number of input files.
+        pages_to_delete (list[int]): List of page numbers to remove from the
+            merged PDF before saving. Defaults to [].
+        remove_unstitched (bool): If True, deletes the input directory and its
+            contents after stitching. Defaults to False.
+    Returns:
+        Stitched PDF
+    """
+    pdf_files = []
+    # get all files from input directory
+    for file in os.listdir(input_direcotry):
+        pdf_files.append(os.path.join("uploaded_files", file))
+        print(file)
+    
+    # if no document name is provided, default to a summary
+    if not document_name:
+        document_name = f"{len(pdf_files)}_stitched"
+    
+    temp_dir = os.path.join(output_folder, "temp")
+    os.makedirs(temp_dir, exist_ok=True)
+    merged_pdf = os.path.join(temp_dir, "merged.pdf")
+
+    # Merge the selected PDF files into a single PDF file
+    merge_pdfs(";".join(pdf_files), merged_pdf)
+    
+    # # Define the path for the renumbered PDF file
+    renumbered_pdf = os.path.join(temp_dir, "renumbered.pdf")
+
+    # # # Renumber the pages of the merged PDF file
+    renumber_pdf(merged_pdf, renumbered_pdf)
+    
+    # Define the final output path for the PDF file after deletion
+    final_output_pdf = os.path.join(output_folder, f"{document_name}.pdf")
+    
+    # Delete specified pages from the renumbered PDF file and show a confirmation pop-up
+    delete_pages(renumbered_pdf, pages_to_delete, final_output_pdf)
+
+    # Remove the temporary directory and its contents
+    shutil.rmtree(temp_dir)
+    # Remove input files folder if specified
+    if remove_unstitched:
+        shutil.rmtree(input_direcotry) 
+    return final_output_pdf
+    
 

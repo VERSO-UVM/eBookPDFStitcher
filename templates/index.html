@@ -13,9 +13,9 @@
     <header>
         <p> Pdf Stitcher</p>
     </header>
-    <form action="/upload" method="POST" enctype="multipart/form-data">
+    <form action="/" method="POST" enctype="multipart/form-data">
         <input type="file" name="file" multiple accept=".pdf" required />
-        <button type="submit">Upload</button>
+        <button type="submit" name="action" value="upload">Upload</button>
     </form>
 </body>
 
