@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import FreeSimpleGUI as sg
 from PyPDF2 import PdfReader, PdfWriter, PdfFileReader
 import fitz
