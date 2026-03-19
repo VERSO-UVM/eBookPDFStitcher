@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, send_file
 import os
 import pdf_stitcher
 
@@ -45,3 +45,10 @@ def stitch_pdf():
     
 
     
+# @app.route("/name", method =["POST"])
+# def download_file(name):
+    
+
+
+
+
