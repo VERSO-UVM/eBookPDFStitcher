@@ -2,5 +2,6 @@
 pdf_files
 .DS_Store
 /test
-chrome_solution/__pycache__/
 __pycache__
+output
+uploaded_files
