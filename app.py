@@ -13,7 +13,6 @@ def index():
 def index_buttons():
     # to if we want to add more buttons I think you can just add another if statement for the action type and it should work!
     action = request.form.get("action")
-    
     if action == "upload":
         files = request.files.getlist("file")
         # save each file in the uploaded_files folder
@@ -27,9 +26,10 @@ def index_buttons():
 @app.route("/file_settings", methods=["POST"])
 def settings_buttons():
     action = request.form.get("action")
+    file_name = request.form.get("file_name")
     if action == "stitch":
         download = True
-        output = pdf_engine.stitch_pdf()
+        output = pdf_engine.stitch_pdf(document_name = file_name)
         if download:
             return send_file(output, as_attachment=True)
     
