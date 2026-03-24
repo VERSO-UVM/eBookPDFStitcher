@@ -1,6 +1,7 @@
 window.onload = function () {
     const form = document.getElementById("choosing_a_name");
-    const button = this.document.getElementById("changing_form")
+    const button = document.getElementById("changing_form")
+    const para = document.getElementById("changing_title")
     forbiden_input = /[\\\/\:\*\?\"\<\>\|]/;
 
 
@@ -13,6 +14,7 @@ window.onload = function () {
         }
         else {
             form.innerHTML = "<br>"
+            para.innerHTML = `<p>You have chosen the name '${file_name}' feel free to click the button below to download your final result </p>`;
             button.innerHTML = `
                 <form action="/file_settings" method='POST'>
                     <input type='hidden' name='file_name' value='${file_name}'>

@@ -6,19 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Settings</title>
     <link rel="icon" href="/static/favicon/favicon.ico">
+    <link rel="stylesheet" href="/static/file_settings.css">
     <script src="{{ url_for('static', filename='file_settings.js') }}"></script>
 
 </head>
 
 <body>
-    <h1>File Settings</h1>
-    <p>We can add feature like editing the name of the output file and preview and such.</p>
+    <header>
+        <h1>File Settings</h1>
+        <p>You have now chosen the pdf(s) you want to stich together</p>
+        <p id = "changing_title">You will now need to choose a name for the final pdf</p>
+    </header>
     <p id="changing_form">
     <form id="choosing_a_name">
         <input type="text" id="file_name" name="file_name" placeholder="file_name" required />
         <button type="submit">Choose a name for your file</button>
     </form>
     </p>
+    <footer>
+        This website has been developed by Orca (Open Research Community Accelerator) at UVM 
+    </footer>
 </body>
 
 </html>
