@@ -8,6 +8,23 @@ body {
     padding: 0;
 }
 
+#uvm {
+  position: absolute;
+  top :0;
+  left :0;
+  border-radius: 4px;
+  padding: 5px;
+  width: 160px;
+}
+
+#verso {
+  position: absolute;
+  top :0;
+  left : 15%;
+  /* border-radius: 4px; */
+  padding: 4px;
+  width: 90px;
+}
 header {
     position: fixed;
     top: 0;
