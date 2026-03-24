@@ -13,7 +13,7 @@ window.onload = function () {
         }
         else{
             const username = document.getElementById("file_name").value.trim();
-            //TODO pass this on to the flask, otherwise it is useless
+            // TODO pass this on to the flask, otherwise it is useless
             console.log(username);
             form.innerHTML ="<br>"
             button.innerHTML = " <form action='/file_settings' method='POST'> <button type='submit' name='action' value='stitch'>Stitch PDF</button> </form>";
