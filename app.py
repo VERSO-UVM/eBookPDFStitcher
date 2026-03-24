@@ -17,6 +17,7 @@ def index_buttons():
     if action == "upload":
         files = request.files.getlist("file")
         # save each file in the uploaded_files folder
+        #TODO update this to make this so it's not just the file in the upload 
         for i in files:
             i.save(f"uploaded_files/{i.filename}")
         # go to the file settings page

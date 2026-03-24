@@ -5,18 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Settings</title>
+    <script src="{{ url_for('static', filename='file_settings.js') }}"></script>
+
 </head>
 
 <body>
     <h1>File Settings</h1>
     <p>We can add feature like editing the name of the output file and preview and such.</p>
-    <form action="/folder" method="POST" enctype="multipart/form-data">
-        <input type="file" name="folder" webkitdirectory directory multiple required />
-        <button type="submit">Choose a folder for your file</button>
+    <p id="changing_form">
+    <form id="choosing_a_name">
+        <input type="text" id="file_name" name="file_name" placeholder="file_name" required />
+        <button type="submit">Choose a name for your file</button>
     </form>
-    <form action="/file_settings" method="POST">
-        <button type="submit" name="action" value="stitch">Stitch PDF</button>
-    </form>
+    </p>
 </body>
 
 </html>
