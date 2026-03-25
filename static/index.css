@@ -27,7 +27,12 @@ header {
     text-align: center;
 }
 
-
+a{
+  color:inherit;
+}
+a:hover{
+  color:gray;
+}
 button {
     background-color: #154734;
     color: white;

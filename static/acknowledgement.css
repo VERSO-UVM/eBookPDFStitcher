@@ -1,7 +1,7 @@
 body {
     position: absolute;
-    top: 50%;
-    left :40%;
+    top: 20%;
+    left :0%;
     font-family: Arial, sans-serif;
     background-color: lightgray;
     margin: 0;
@@ -19,28 +19,14 @@ body {
 #home_button{
   color:inherit;
   position: fixed;
-  top :0;
+  top :0; 
   right :0;
 }
 #home_button:hover{
   color:gray;
 }
 
-a{
-  color:inherit;
-}
-a:hover{
-  color:gray;
-}
-/* 
-#verso {
-  position: absolute;
-  top :0;
-  left : 15%;
-  border-radius: 4px;
-  padding: 4px;
-  width: 90px;
-} */
+
 header {
     position: fixed;
     top: 0;

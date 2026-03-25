@@ -47,7 +47,6 @@ def settings_buttons():
             shutil.rmtree(input_directory)
             return send_file(output, as_attachment=True)
 
-
-
-
-
+@app.route("/acknowledgement")
+def acknowledgement():
+    return render_template ("acknowledgement.html")
