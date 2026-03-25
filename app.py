@@ -33,7 +33,6 @@ def settings_buttons():
         if download:
             return send_file(output, as_attachment=True)
 
-
-
-
-
+@app.route("/acknowledgement")
+def acknowledgement():
+    return render_template ("acknowledgement.html")

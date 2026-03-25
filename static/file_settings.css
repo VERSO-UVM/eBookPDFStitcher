@@ -25,6 +25,13 @@ body {
 #home_button:hover{
   color:gray;
 }
+
+a{
+  color:inherit;
+}
+a:hover{
+  color:gray;
+}
 /* 
 #verso {
   position: absolute;
