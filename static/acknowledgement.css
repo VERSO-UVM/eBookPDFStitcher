@@ -1,12 +1,13 @@
 body {
     position: absolute;
-    top: 50%;
-    left :40%;
+    top: 20%;
+    left :0%;
     font-family: Arial, sans-serif;
     background-color: lightgray;
     margin: 0;
     padding: 0;
 }
+
 #uvm {
   position: absolute;
   top :0;
@@ -15,6 +16,16 @@ body {
   padding: 5px;
   width: 160px;
 }
+#home_button{
+  color:inherit;
+  position: fixed;
+  top :0; 
+  right :0;
+}
+#home_button:hover{
+  color:gray;
+}
+
 
 header {
     position: fixed;
@@ -27,12 +38,7 @@ header {
     text-align: center;
 }
 
-a{
-  color:inherit;
-}
-a:hover{
-  color:gray;
-}
+
 button {
     background-color: #154734;
     color: white;
