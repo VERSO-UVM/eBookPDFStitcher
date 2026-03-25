@@ -32,13 +32,7 @@ def settings_buttons():
         output = pdf_engine.stitch_pdf(document_name = file_name)
         if download:
             return send_file(output, as_attachment=True)
-    
-    
 
-    
-# @app.route("/name", method =["POST"])
-# def download_file(name):
-    
 
 
 

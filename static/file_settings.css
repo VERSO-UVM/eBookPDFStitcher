@@ -16,25 +16,24 @@ body {
   padding: 5px;
   width: 160px;
 }
-a{
+#home_button{
   color:inherit;
   position: fixed;
   top :0;
   right :0;
 }
-a:hover{
+#home_button:hover{
   color:gray;
 }
-
-
+/* 
 #verso {
   position: absolute;
   top :0;
   left : 15%;
-  /* border-radius: 4px; */
+  border-radius: 4px;
   padding: 4px;
   width: 90px;
-}
+} */
 header {
     position: fixed;
     top: 0;
