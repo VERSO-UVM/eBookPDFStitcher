@@ -1,13 +1,18 @@
-from flask import Flask, request, render_template, send_file
+from flask import Flask, request, render_template, send_file, make_response
 import pdf_engine
 import os
 import shutil
+import uuid
 
 app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    response = make_response(render_template("index.html"))
+    if request.cookies.get('id') == None:
+        id = uuid.uuid1()
+        response.set_cookie('id', str(id))
+    return response
 
 @app.route("/", methods=["POST"])
 def index_buttons():
