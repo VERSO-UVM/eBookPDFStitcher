@@ -5,13 +5,18 @@ import shutil
 import uuid
 
 app = Flask(__name__)
+upload = "uploaded_files"
 
 @app.route("/")
 def index():
     response = make_response(render_template("index.html"))
     if request.cookies.get('id') == None:
-        id = uuid.uuid1()
-        response.set_cookie('id', str(id))
+        id = str(uuid.uuid1())
+        response.set_cookie('id', id)
+    id = request.cookies.get('id')
+    upload_dir = os.path.join(upload, id)
+    if(not os.path.isdir(upload_dir)):
+        os.mkdir(upload_dir)
     return response
 
 @app.route("/", methods=["POST"])
@@ -21,21 +26,25 @@ def index_buttons():
     if action == "upload":
         files = request.files.getlist("file")
         # save each file in the uploaded_files folder
-        #TODO update this to make this so it's not just the file in the upload 
+        # TODO: eventually move to static folder for embedding pdf viewing
+        id = request.cookies.get('id')
         for i in files:
-            i.save(f"uploaded_files/{i.filename}")
+            i.save(f"{upload}/{id}/{i.filename}")
         # go to the file settings page
         return render_template("file_settings.html")
 
 
 @app.route("/file_settings", methods=["POST"])
 def settings_buttons():
+    id = request.cookies.get('id')
+    input_directory = os.path.join(upload, id)
     action = request.form.get("action")
     file_name = request.form.get("file_name")
     if action == "stitch":
         download = True
-        output = pdf_engine.stitch_pdf(document_name = file_name)
+        output = pdf_engine.stitch_pdf(input_directory=input_directory, document_name = file_name)
         if download:
+            shutil.rmtree(input_directory)
             return send_file(output, as_attachment=True)
 
 

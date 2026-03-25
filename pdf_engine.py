@@ -120,12 +120,12 @@ def save_remaining_pages(pdf_files, output_pdf, pages_to_save):
         pdf_writer.write(output)
         
         
-def stitch_pdf(output_folder = "output", input_direcotry = "uploaded_files", document_name = None, pages_to_delete = [], remove_unstitched = False):
+def stitch_pdf(output_folder = "output", input_directory = "uploaded_files", document_name = None, pages_to_delete = [], remove_unstitched = False):
     """Merges, renumbers, and optionally cleans up a collection of PDF files.
     Parameters:
         output_folder (str): Path to the directory where the final PDF will be
             saved. Defaults to "output".
-        input_direcotry (str): Path to the directory containing the input PDF
+        input_directory (str): Path to the directory containing the input PDF
             files to stitch. Defaults to "uploaded_files".
         document_name (str, optional): Base name for the output PDF file
             (without extension). If None, defaults to "<n>_stitched" where
@@ -139,8 +139,8 @@ def stitch_pdf(output_folder = "output", input_direcotry = "uploaded_files", doc
     """
     pdf_files = []
     # get all files from input directory
-    for file in os.listdir(input_direcotry):
-        pdf_files.append(os.path.join("uploaded_files", file))
+    for file in os.listdir(input_directory):
+        pdf_files.append(os.path.join(input_directory, file))
         print(file)
     
     # if no document name is provided, default to a summary
@@ -170,7 +170,7 @@ def stitch_pdf(output_folder = "output", input_direcotry = "uploaded_files", doc
     shutil.rmtree(temp_dir)
     # Remove input files folder if specified
     if remove_unstitched:
-        shutil.rmtree(input_direcotry) 
+        shutil.rmtree(input_directory) 
     return final_output_pdf
     
 
