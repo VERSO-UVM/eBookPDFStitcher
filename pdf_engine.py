@@ -173,4 +173,18 @@ def stitch_pdf(output_folder = "output", input_directory = "uploaded_files", doc
         shutil.rmtree(input_directory) 
     return final_output_pdf
     
-
+# multi_stitch takes a directory of folders of separate pdfs to be stitched and outputs a zip containing each stitched pdf file.
+# TODO: give user more freedom for things like name and order of pdfs and stuff.
+def multi_stitch(meta_input_directory, output_folder = "output"):
+    # make temp folder
+    temp = os.path.join(output_folder, "multi_temp")
+    os.makedirs(temp, exist_ok=True)
+    
+    output_paths = []
+    for directory in os.scandir(meta_input_directory):
+        output_paths.append(stitch_pdf(output_folder=temp, input_directory=directory))
+    
+    zip_path = os.path.join(output_folder, "multi_stitched_pdfs")
+    zip_output = shutil.make_archive(base_name=zip_path,root_dir=output_folder,format="zip")
+    shutil.rmtree(temp) 
+    return zip_output
