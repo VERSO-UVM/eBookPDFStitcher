@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, send_file, make_response, redirect
+from flask import Flask, request, render_template, send_file, make_response, redirect, flash
 import pdf_engine
 import os
 import shutil
@@ -45,8 +45,11 @@ def settings_buttons():
         output = pdf_engine.stitch_pdf(input_directory=input_directory, document_name = file_name)
         shutil.rmtree(input_directory)
         return send_file(output, as_attachment=True)
-    except Exception as e : 
-        return render_template("index.html")
+    except FileNotFoundError as e : 
+        return redirect("/")
+    except PermissionError as e:
+        #TODO We need to figure out why this error is happening
+        return redirect("/acknowledgement")
     
 @app.route("/acknowledgement")
 def acknowledgement():
