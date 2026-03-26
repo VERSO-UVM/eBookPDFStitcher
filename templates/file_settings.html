@@ -8,6 +8,7 @@
     <link rel="icon" href="/static/asset/favicon/favicon.ico">
     <link rel="stylesheet" href="/static/file_settings.css">
     <script src="{{ url_for('static', filename='file_settings.js') }}"></script>
+    <script src="{{ url_for('static', filename='timer.js') }}"></script>
 
 </head>
 
@@ -18,8 +19,8 @@
             <!-- When we get a real logo of orca, we might want to replace this -->
             <!-- <img src ="static\asset\verso_logo.png" id ="verso" alt ="logo of Verso"> -->
             <!-- TODO change the icon and make it fit -->
-            <h1>File Settings</h1>
-
+            <h1>File Settings</h1> 
+            <p> Time remaining: <span id="timer-display"></span></p>
             <a href="{{ url_for('index') }}" id="home_button">← Home</a>
 
         </div>
