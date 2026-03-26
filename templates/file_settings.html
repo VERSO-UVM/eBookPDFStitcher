@@ -13,26 +13,49 @@
 
 <body>
     <header>
-        <img src="static\asset\UVM_Logo_Primary_Horiz_WhiteGR.png" id="uvm" alt="logo of UVM">
-        <!-- When we get a real logo of orca, we might want to replace this -->
-        <!-- <img src ="static\asset\verso_logo.png" id ="verso" alt ="logo of Verso"> -->
-        <!-- TODO change the icon and make it fit -->
-        <h1>File Settings</h1>
-        <p>You have now chosen the pdf(s) you want to stich together</p>
-        <p id="changing_title">You will now need to choose a name for the final pdf</p>
-        <a href="{{ url_for('index') }}" id ="home_button">Home </a>
+        <div id="header-content">
+            <img src="static\asset\UVM_Logo_Primary_Horiz_WhiteGR.png" id="uvm" alt="logo of UVM">
+            <!-- When we get a real logo of orca, we might want to replace this -->
+            <!-- <img src ="static\asset\verso_logo.png" id ="verso" alt ="logo of Verso"> -->
+            <!-- TODO change the icon and make it fit -->
+            <h1>File Settings</h1>
+
+            <button href="{{ url_for('index') }}" id="home_button">← Home</a>
+
+        </div>
+        <p id="changing_title">Choose a name for the output PDF</p>
+
     </header>
-    <p id="changing_form">
-    <form id="choosing_a_name">
-        <input type="text" id="file_name" name="file_name" placeholder="file_name" required />
-        <button type="submit">Choose a name for your file</button>
-    </form>
-    </p>
+    <div id="flex-content">
+
+        <div id="pdf-viewer" style="height: 500%"></div>
+        <script async type="module">
+            import EmbedPDF from 'https://cdn.jsdelivr.net/npm/@embedpdf/snippet@2/dist/embedpdf.js';
+            const viewer = EmbedPDF.init({
+                type: 'container',
+                target: document.getElementById('pdf-viewer'),
+                src: 'https://snippet.embedpdf.com/ebook.pdf'
+            }) 
+        </script>
+        <div id="settings">
+            <input placeholder="delete pages"></input>
+
+            
+            <div id="changing_form">
+                <form id="choosing_a_name">
+                    <input type="text" id="file_name" name="file_name" placeholder="file name" required />
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
     <footer>
         <p>
             This website has been developed by Orca (Open Research Community Accelerator) at UVM
         </p>
-        <a href = "{{ url_for('acknowledgement') }}" target="_blank"> Acknowledgement</a>
+        <a href="{{ url_for('acknowledgement') }}" target="_blank"> Acknowledgement</a>
     </footer>
 </body>
 
