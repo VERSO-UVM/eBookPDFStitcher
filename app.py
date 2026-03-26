@@ -6,6 +6,7 @@ import uuid
 
 app = Flask(__name__)
 upload = "uploaded_files"
+app.secret_key = "Im_only_doing_this_for_flask"
 
 @app.route("/")
 def index():
@@ -48,9 +49,15 @@ def settings_buttons():
     except FileNotFoundError as e : 
         return redirect("/")
     except PermissionError as e:
+        error = e 
         #TODO We need to figure out why this error is happening
-        return redirect("/acknowledgement")
+        flash("we dont know why this is happening but it's linked to permision")
+        return render_template("errors.html" , error = error)
     
 @app.route("/acknowledgement")
 def acknowledgement():
     return render_template ("acknowledgement.html")
+
+@app.route("/errors")
+def errors():
+    return render_template("errors.html")
