@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, send_file, make_response
+from flask import Flask, request, render_template, send_file, make_response, redirect
 import pdf_engine
 import os
 import shutil
@@ -9,10 +9,12 @@ upload = "uploaded_files"
 
 @app.route("/")
 def index():
-    response = make_response(render_template("index.html"))
     if request.cookies.get('id') == None:
         id = str(uuid.uuid1())
+        response = make_response(redirect("/"))
         response.set_cookie('id', id)
+        return response
+    response = make_response(render_template("index.html"))
     id = request.cookies.get('id')
     upload_dir = os.path.join(upload, id)
     if(not os.path.isdir(upload_dir)):
