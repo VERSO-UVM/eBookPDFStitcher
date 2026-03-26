@@ -11,7 +11,7 @@ function startPersistentTimer() {
         endTime = Number(endTime);
     }
 
-    const interval = setInterval(function() {
+    const interval = setInterval(function () {
         const now = new Date().getTime();
         const remainingTime = endTime - now;
         const display = document.getElementById('timer-display');
@@ -27,6 +27,7 @@ function startPersistentTimer() {
             clearInterval(interval);
             if (display) {
                 display.textContent = "EXPIRED";
+                fetch('/no_more_times', {})
             }
             sessionStorage.removeItem(TIMER_KEY);
         }
