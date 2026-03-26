@@ -140,9 +140,9 @@ def stitch_pdf(output_folder = "output", input_directory = "uploaded_files", doc
     pdf_files = []
     # get all files from input directory
     for file in os.listdir(input_directory):
+        if not file.endswith(".pdf"):
+            continue
         pdf_files.append(os.path.join(input_directory, file))
-        print(file)
-    
     # if no document name is provided, default to a summary
     if not document_name:
         document_name = f"{len(pdf_files)}_stitched"
