@@ -48,8 +48,11 @@ def settings_buttons():
         duplicate = shutil.copy(os.join(stitched_pdf_dir,"auto_stitched.pdf"),os.join("output",file_name))
         shutil.rmtree(user_directory)
         return send_file(duplicate, as_attachment=True)
-    except Exception as e : 
-        return render_template("index.html")
+    except FileNotFoundError as e : 
+        return redirect("/")
+    except PermissionError as e:
+        #TODO We need to figure out why this error is happening
+        return redirect("/acknowledgement")
     
 @app.route("/file_settings")
 def auto_stitch():
