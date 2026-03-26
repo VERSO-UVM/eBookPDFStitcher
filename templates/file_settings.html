@@ -30,10 +30,14 @@
 
         <div id="pdf-viewer" style="height: 500%"></div>
         <div id="settings">
-            <input placeholder="delete pages"></input>
+            <div class="option">
+                <h3>Reorder or delete pages</h3>
+                <ul id="pdf_list">
+                </ul>
+                <button>Delete Selected</button>
+            </div>
 
-            
-            <div id="changing_form">
+            <div id="changing_form" class="option">
                 <form id="choosing_a_name">
                     <input type="text" id="file_name" name="file_name" placeholder="file name" required />
                     <button type="submit">Submit</button>

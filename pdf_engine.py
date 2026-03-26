@@ -137,12 +137,7 @@ def stitch_pdf(output_folder = "output", input_directory = "uploaded_files", doc
     Returns:
         Stitched PDF
     """
-    pdf_files = []
-    # get all files from input directory
-    for file in os.listdir(input_directory):
-        if not file.endswith(".pdf"):
-            continue
-        pdf_files.append(os.path.join(input_directory, file))
+    pdf_files = get_pdf_files(input_directory)
     # if no document name is provided, default to a summary
     if not document_name:
         document_name = f"{len(pdf_files)}_stitched"
@@ -216,4 +211,21 @@ def reorder_pdf(pdf_path: str, new_order=[], output_directory=None):
     with open(os.path.join(output_directory,new_pdf_name), 'wb') as output:
         pdf_writer.write(output)
 
-# reorder_pdf("pdf_files/TEST_DOC.pdf",[0,2,1,4,3])
+# get info of a pdf. used for reordering.
+def get_pdf_info(file_path):
+    info = {}
+    pdf_reader = PdfReader(file_path)
+    info["fileName"] = os.path.basename(file_path).split('.pdf', 1)[0]
+    info["numPages"] = len(pdf_reader.pages)
+    info["title"] = pdf_reader.metadata["/Title"]
+    # more fields can be added easily later if we want to show more things.
+    return info
+
+# moved this to a separate function since it's used more than once
+def get_pdf_files(directory_path):
+    pdf_files = []
+    # get all files from input directory
+    for file in os.listdir(directory_path):
+        if file.endswith(".pdf"):
+            pdf_files.append(os.path.join(directory_path, file))
+    return pdf_files

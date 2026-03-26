@@ -95,3 +95,13 @@ def serve_file(filename):
         return send_from_directory(output_dir, filename)
     else:
         raise FileNotFoundError(f"File \"{filename}\" not found")
+
+@app.route("/getInputList")
+def get_file_list():
+    id = session.get("id")
+    user_dir = os.path.join('uploaded_files', id)
+    file_list = []
+    pdf_files = pdf_engine.get_pdf_files(user_dir)
+    for pdf in pdf_files:
+        file_list.append(pdf_engine.get_pdf_info(pdf))
+    return file_list

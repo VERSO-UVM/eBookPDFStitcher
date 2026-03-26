@@ -106,8 +106,27 @@ p {
 }
 
 #settings {
-  background-color:#1547344c;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.option {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background-color:#15463321;
+  border-width: 2px;
+  border-color:#15463339;
+  border-style:solid;
   border-radius:10px;
-  padding:10px;
+  padding:6px;
   height:fit-content;
+  margin: 10px 0 0 0;
+}
+
+input {
+  padding: 5px 5px;
+  border-radius: 3px;
+  border-style: solid;
+  border-width: 2px;
 }

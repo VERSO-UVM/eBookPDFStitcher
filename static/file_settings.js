@@ -36,7 +36,37 @@ window.onload = function () {
         return viewer;
     }
 
+    // get all the user's files
+    async function getInputList() {
+        // call flask thing to retrieve all uploaded files
+        response = await fetch('/getInputList');
+        files = await response.json();
+        
+        const list = document.getElementById("pdf_list")
+        // add each pdf to the DOM
+        for(const file of files) {
+            console.log(file);
+            const li = document.createElement("li");
+            const details = document.createElement("details");
+            const summary = document.createElement("summary");
+            summary.innerText = file.title+" ("+file.numPages+" pages)"
+            details.appendChild(summary);
+            
+            // dropdown with individual pages list (for more granular reordering/deleting in the future.)
+            for (i = 1; i<file.numPages;i++) {
+                const option = document.createElement("p");
+                option.innerHTML = i+"<input type=\"checkbox\">"
+                details.appendChild(option);
+            }
+            li.appendChild(details);
+            list.appendChild(li);
+        }
+    }
+
+    getInputList();
     // this can be called at any point automatically to reload the pdf!!
     reloadPDFViewer(`/files/stitched_pdfs/auto_stitched.pdf`);
-};
 
+
+    
+};
