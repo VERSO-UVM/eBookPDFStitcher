@@ -5,3 +5,4 @@ pdf_files
 __pycache__
 output
 uploaded_files
+static/session_info
