@@ -50,7 +50,7 @@ def index_buttons():
         os.makedirs(stitch_dir, exist_ok=True)
         pdf_engine.stitch_pdf(output_folder=stitch_dir,input_directory=user_directory,document_name="auto_stitched")
         # go to the file settings page
-        return render_template("file_settings.html",id = id)
+        return render_template("file_settings.html")
 
 
 @app.route("/file_settings", methods=["POST"])

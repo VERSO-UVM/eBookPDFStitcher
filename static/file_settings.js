@@ -35,7 +35,8 @@ window.onload = function () {
         });
         return viewer;
     }
+
+    // this can be called at any point automatically to reload the pdf!!
+    reloadPDFViewer(`/files/stitched_pdfs/auto_stitched.pdf`);
 };
 
-// this can be called at any point automatically to reload the pdf!!
-reloadPDFViewer(`/files/stitched_pdfs/auto_stitched.pdf`);
