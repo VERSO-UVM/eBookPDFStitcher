@@ -1,9 +1,8 @@
 window.onload = function () {
     const form = document.getElementById("choosing_a_name");
-    const button = document.getElementById("changing_form")
-    const para = document.getElementById("changing_title")
-    forbiden_input = /[\\\/\:\*\?\"\<\>\|]/;
-
+    const button = document.getElementById("changing_form");
+    const para = document.getElementById("changing_title");
+    const forbiden_input = /[\\\/\:\*\?\"\<\>\|]/;
 
     form.addEventListener("submit", function (event) {
         event.preventDefault();
@@ -20,6 +19,23 @@ window.onload = function () {
                     <input type='hidden' name='file_name' value='${file_name}'>
                     <button type='submit' name='action' value='stitch'>Download PDF</button>
                 </form>`;
+        }
+    });
 
-        }});
+    async function reloadPDFViewer(src) {
+        const { default: EmbedPDF } = await import('https://cdn.jsdelivr.net/npm/@embedpdf/snippet@2/dist/embedpdf.js');
+
+        const container = document.getElementById('pdf-viewer');
+        container.innerHTML = '';
+
+        const viewer = EmbedPDF.init({
+            type: 'container',
+            target: container,
+            src
+        });
+        return viewer;
+    }
 };
+
+// this can be called at any point automatically to reload the pdf!!
+reloadPDFViewer(`/files/stitched_pdfs/auto_stitched.pdf`);

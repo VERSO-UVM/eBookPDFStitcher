@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, send_file, make_response, redirect, flash, session
+from flask import Flask, request, render_template, send_file, make_response, redirect, flash, session, send_from_directory
 from flask_session import Session
 from cachelib.file import FileSystemCache
 from datetime import timedelta
@@ -40,10 +40,17 @@ def index_buttons():
         # save each file in the uploaded_files folder
         # TODO: eventually move to static folder for embedding pdf viewing
         id = session.get('id')
+        user_directory = f"{upload}/{id}"
+        
         for i in files:
-            i.save(f"{upload}/{id}/{i.filename}")
+            i.save(f"{user_directory}/{i.filename}")   
+        
+        # make directory with autostitched pdf for preview purposes 
+        stitch_dir = f"{user_directory}/stitched_pdfs"
+        os.makedirs(stitch_dir, exist_ok=True)
+        pdf_engine.stitch_pdf(output_folder=stitch_dir,input_directory=user_directory,document_name="auto_stitched")
         # go to the file settings page
-        return render_template("file_settings.html")
+        return render_template("file_settings.html",id = id)
 
 
 @app.route("/file_settings", methods=["POST"])
@@ -54,7 +61,7 @@ def settings_buttons():
     file_name = request.form.get("file_name")
     
     try :
-        duplicate = shutil.copy(os.join(stitched_pdf_dir,"auto_stitched.pdf"),os.join("output",file_name))
+        duplicate = shutil.copy(f"{stitched_pdf_dir}/auto_stitched.pdf",f"output/{file_name}.pdf")
         shutil.rmtree(user_directory)
         return send_file(duplicate, as_attachment=True)
     except FileNotFoundError as e : 
@@ -65,12 +72,6 @@ def settings_buttons():
         flash("we dont know why this is happening but it's linked to permision")
         return render_template("errors.html" , error = error)
     
-@app.route("/file_settings")
-def auto_stitch():
-    id = session.get('id')
-    user_directory = os.path.join(upload, id)
-    stitch_dir = os.mkdir(os.path.join(user_directory,"stitched_pdfs"))
-    pdf_engine.stitch_pdf(output_folder=stitch_dir,input_directory=user_directory,document_name="auto_stitched")
 
 @app.route("/acknowledgement")
 def acknowledgement():
@@ -79,3 +80,18 @@ def acknowledgement():
 @app.route("/errors")
 def errors():
     return render_template("errors.html")
+
+# allow JS to access only the output files and user id folder.
+@app.route('/files/<path:filename>')
+def serve_file(filename):
+    id = session.get("id")
+
+    user_dir = os.path.join('uploaded_files', id)
+    output_dir = 'output'
+
+    if os.path.exists(os.path.join(user_dir, filename)):
+        return send_from_directory(user_dir, filename)
+    elif os.path.exists(os.path.join(output_dir, filename)):
+        return send_from_directory(output_dir, filename)
+    else:
+        raise FileNotFoundError(f"File \"{filename}\" not found")
