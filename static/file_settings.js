@@ -18,7 +18,7 @@ window.onload = function () {
             button.innerHTML = `
                 <form action="/file_settings" method='POST'>
                     <input type='hidden' name='file_name' value='${file_name}'>
-                    <button type='submit' name='action' value='stitch'>Stitch PDF</button>
+                    <button type='submit' name='action' value='stitch'>Download PDF</button>
                 </form>`;
 
         }});
