@@ -38,15 +38,14 @@ def index_buttons():
 def settings_buttons():
     id = request.cookies.get('id')
     input_directory = os.path.join(upload, id)
-    action = request.form.get("action")
     file_name = request.form.get("file_name")
-    if action == "stitch":
-        download = True
+    try :
         output = pdf_engine.stitch_pdf(input_directory=input_directory, document_name = file_name)
-        if download:
-            shutil.rmtree(input_directory)
-            return send_file(output, as_attachment=True)
-
+        shutil.rmtree(input_directory)
+        return send_file(output, as_attachment=True)
+    except Exception as e : 
+        return render_template("index.html")
+    
 @app.route("/acknowledgement")
 def acknowledgement():
     return render_template ("acknowledgement.html")
