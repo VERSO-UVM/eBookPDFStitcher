@@ -188,3 +188,32 @@ def multi_stitch(meta_input_directory, output_folder = "output"):
     zip_output = shutil.make_archive(base_name=zip_path,root_dir=output_folder,format="zip")
     shutil.rmtree(temp) 
     return zip_output
+
+# reorders a pdf given a list of indeces of the new order, ex.) [1,0,3,4,2]
+def reorder_pdf(pdf_path: str, new_order=[], output_directory=None):
+    if not pdf_path.endswith(".pdf"):
+        raise TypeError("File must be a PDF.")
+    if not output_directory:
+        output_directory = os.path.dirname(pdf_path)
+    
+    # Create a PdfWriter object
+    pdf_writer = PdfWriter()
+   
+    with open(pdf_path, 'rb') as file:
+        pdf_reader = PdfReader(file)
+
+        # exit if ordering/values are different length than the pdf
+        if not sorted(new_order) == list(range(len(pdf_reader.pages))):
+            print(new_order)
+            print(sorted(new_order))
+            raise ValueError("New order must be same length as pdf and have the same values.")
+        # Loop through each page in the PDF file
+        for i in new_order:
+            # Add the page to the PdfWriter object
+            pdf_writer.add_page(pdf_reader.pages[i])
+    new_pdf_name = f"reordered_{os.path.basename(file.name)}"
+    # Write the merged PDF file to the output file
+    with open(os.path.join(output_directory,new_pdf_name), 'wb') as output:
+        pdf_writer.write(output)
+
+# reorder_pdf("pdf_files/TEST_DOC.pdf",[0,2,1,4,3])
