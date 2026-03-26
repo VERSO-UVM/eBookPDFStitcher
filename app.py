@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, send_file, make_response, redirect
+from flask import Flask, request, render_template, send_file, make_response, redirect,flash
 import pdf_engine
 import os
 import shutil
@@ -51,8 +51,10 @@ def settings_buttons():
     except FileNotFoundError as e : 
         return redirect("/")
     except PermissionError as e:
+        error = e 
         #TODO We need to figure out why this error is happening
-        return redirect("/acknowledgement")
+        flash("we dont know why this is happening but it's linked to permision")
+        return render_template("errors.html" , error = error)
     
 @app.route("/file_settings")
 def auto_stitch():
