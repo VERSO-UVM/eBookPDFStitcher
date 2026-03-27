@@ -19,7 +19,7 @@
             <!-- When we get a real logo of orca, we might want to replace this -->
             <!-- <img src ="static\asset\verso_logo.png" id ="verso" alt ="logo of Verso"> -->
             <!-- TODO change the icon and make it fit -->
-            <h1>File Settings</h1> 
+            <h1>File Settings</h1>
             <p> Time remaining: <span id="timer-display"></span></p>
             <a href="{{ url_for('index') }}" id="home_button">← Home</a>
 
@@ -29,12 +29,13 @@
     </header>
     <div id="flex-content">
 
-        <div id="pdf-viewer" style="height: 500%"></div>
+        <div class="option" id="pdf-viewer" style="height: 500%"></div>
         <div id="settings">
             <div class="option">
                 <h3>Reorder or delete pages</h3>
-                <ul id="pdf_list">
-                </ul>
+                <p>Drag and drop each section to reorder. Click each section to select pages to delete.</p>
+                <ol id="pdf-list">
+                </ol>
                 <button>Delete Selected</button>
             </div>
 

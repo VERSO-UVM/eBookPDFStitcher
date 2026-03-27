@@ -42,28 +42,50 @@ window.onload = function () {
         response = await fetch('/getInputList');
         files = await response.json();
         
-        const list = document.getElementById("pdf_list")
+        const list = document.getElementById("pdf-list")
         // add each pdf to the DOM
         for(const file of files) {
             console.log(file);
             const li = document.createElement("li");
+            li.setAttribute("class","pdf-li");
+            
             const details = document.createElement("details");
             const summary = document.createElement("summary");
-            summary.innerText = file.title+" ("+file.numPages+" pages)"
+            const title = document.createElement("span")
+            title.setAttribute("class","pdf-title")
+            title.innerText = file.title
+            summary.appendChild(title)
+
             details.appendChild(summary);
             
             // dropdown with individual pages list (for more granular reordering/deleting in the future.)
-            for (i = 1; i<file.numPages;i++) {
-                const option = document.createElement("p");
-                option.innerHTML = i+"<input type=\"checkbox\">"
-                details.appendChild(option);
+            const nested_ul = document.createElement("ol");
+            nested_ul.setAttribute("class","nested-ol");
+            for (i = 1; i<=file.numPages;i++) {
+                const nested_li = document.createElement("li");
+                nested_li.setAttribute("class","nested-li")
+                const page_num = document.createElement("p");
+                page_num.innerText = i
+
+                const checkbox = document.createElement("input");
+                checkbox.setAttribute("type","checkbox");
+
+                nested_li.appendChild(page_num);
+                nested_li.appendChild(checkbox);
+                nested_ul.appendChild(nested_li);
             }
+            details.append(nested_ul);
+            const numpg = document.createElement("span")
+            numpg.setAttribute("class","page-num")
+            numpg.innerText = file.numPages
+            summary.append(numpg)
             li.appendChild(details);
             list.appendChild(li);
         }
     }
 
     getInputList();
+
     // this can be called at any point automatically to reload the pdf!!
     reloadPDFViewer(`/files/stitched_pdfs/auto_stitched.pdf`);
 
