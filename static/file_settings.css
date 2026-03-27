@@ -111,7 +111,7 @@ p {
   flex-direction: column;
   justify-content: flex-end;
   margin: 10px;
-  max-width: 100%;
+  max-width: 40vw;
   gap: 10px;
 }
 
@@ -132,7 +132,7 @@ p {
   overflow-y: scroll;
   overflow-x: hidden;
   padding-left: 0;
-  margin: 0;
+  margin: 4px 0;
 }
 
 .pdf-li {
@@ -143,7 +143,15 @@ p {
   color: white;
   font-size: small;
   gap: 8px;
+  display:flex;
 }
+
+details {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
 summary {
   display: flex;
   justify-content: space-between;
