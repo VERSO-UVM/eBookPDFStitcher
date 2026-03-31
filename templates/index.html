@@ -17,9 +17,17 @@
         <p>
             Hello! This website is here to help you stitch together multiple pdf together.
         </p>
-         <p>In order to have a better amount of privacy, and less holding of private data, we will shut your session 
-            after 30 minute of time spent on this website. After this time, even if you have not downloaded your stitched pdf, we will wipe all uploaded file.
-            <br>Time remaining: <span id="timer-display"></span></p>
+        <div> 
+            Time remaining <img src="static\asset\information_logo.png" id="information" alt="information logo">:
+        </div>
+
+        <span>In order to have a better amount of privacy, and less holding of private data, we will shut your session
+            after 30 minute of time spent on this website. After this time, even if you have not downloaded your
+            stitched pdf, we will wipe all uploaded file.
+        </span>
+
+
+        <p id="timer-display"></p>
     </header>
     <form action="/" method="POST" enctype="multipart/form-data">
         <input type="file" name="file" multiple accept=".pdf" required />

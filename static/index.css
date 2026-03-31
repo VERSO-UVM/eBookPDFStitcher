@@ -15,6 +15,11 @@ body {
   padding: 5px;
   width: 160px;
 }
+#information{
+  position: relative;
+  padding: 3px;
+  width: 10px;
+}
 
 header {
     position: fixed;
@@ -52,4 +57,17 @@ footer {
     background-color: #154734;
     color: white;
     padding: 24px;
+}
+
+div{
+margin:20px;
+}
+
+span {
+display:none;
+margin:20px;
+}
+
+div:hover ~ span {
+display:block;
 }
