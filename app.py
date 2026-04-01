@@ -17,7 +17,6 @@ Session(app)
 upload = "uploaded_files"
 app.secret_key = "Im_only_doing_this_for_flask"
 
-
 @app.route("/")
 def index():
     if(session.get("id") == None):
@@ -116,3 +115,13 @@ def get_file_list():
     for pdf in pdf_files:
         file_list.append(pdf_engine.get_pdf_info(pdf))
     return file_list
+
+@app.route("/restitch", methods=["POST"])
+def restitch_preview():
+    id = session.get('id')
+    user_directory = os.path.join('uploaded_files', id)
+    
+    data = request.get_json()
+    deleted_pages = data.get("deleted_pages") or []
+    renumber = data.get("renumber", False)
+    pdf_engine.stitch_pdf(output_folder=f"{user_directory}/stitched_pdfs",input_directory=user_directory,document_name="auto_stitched",pages_to_delete=deleted_pages,renumber = renumber)

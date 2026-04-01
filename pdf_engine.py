@@ -120,7 +120,7 @@ def save_remaining_pages(pdf_files, output_pdf, pages_to_save):
         pdf_writer.write(output)
         
         
-def stitch_pdf(output_folder = "output", input_directory = "uploaded_files", document_name = None, pages_to_delete = [], remove_unstitched = False):
+def stitch_pdf(output_folder = "output", input_directory = "uploaded_files", document_name = None, pages_to_delete = [], remove_unstitched = False, renumber = False):
     """Merges, renumbers, and optionally cleans up a collection of PDF files.
     Parameters:
         output_folder (str): Path to the directory where the final PDF will be
@@ -153,13 +153,15 @@ def stitch_pdf(output_folder = "output", input_directory = "uploaded_files", doc
     renumbered_pdf = os.path.join(temp_dir, "renumbered.pdf")
 
     # # # Renumber the pages of the merged PDF file
-    renumber_pdf(merged_pdf, renumbered_pdf)
+    if renumber:
+        renumber_pdf(merged_pdf, renumbered_pdf)
+        merged_pdf = renumbered_pdf
     
     # Define the final output path for the PDF file after deletion
     final_output_pdf = os.path.join(output_folder, f"{document_name}.pdf")
     
-    # Delete specified pages from the renumbered PDF file and show a confirmation pop-up
-    delete_pages(renumbered_pdf, pages_to_delete, final_output_pdf)
+    # Delete specified pages from the PDF file
+    delete_pages(merged_pdf, pages_to_delete, final_output_pdf)
 
     # Remove the temporary directory and its contents
     shutil.rmtree(temp_dir)

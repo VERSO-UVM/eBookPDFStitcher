@@ -31,7 +31,7 @@ window.onload = function () {
         const viewer = EmbedPDF.init({
             type: 'container',
             target: container,
-            src
+            src: `${src}?t=${Date.now()}`
         });
         return viewer;
     }
@@ -41,37 +41,37 @@ window.onload = function () {
         // call flask thing to retrieve all uploaded files
         response = await fetch('/getInputList');
         files = await response.json();
-        
+
         // set dimensions of pdf viewer based on width/height
-        document.getElementById("pdf-viewer").style.width = 90*(files[0].width/files[0].height) + "vh";
+        document.getElementById("pdf-viewer").style.width = 90 * (files[0].width / files[0].height) + "vh";
 
         const list = document.getElementById("pdf-list")
         // add each pdf to the DOM
-        for(const file of files) {
+        for (const file of files) {
             console.log(file);
             const li = document.createElement("li");
-            li.setAttribute("class","pdf-li");
-            
+            li.setAttribute("class", "pdf-li");
+
             const details = document.createElement("details");
             const summary = document.createElement("summary");
             const title = document.createElement("span")
-            title.setAttribute("class","pdf-title")
+            title.setAttribute("class", "pdf-title")
             title.innerText = file.title
             summary.appendChild(title)
 
             details.appendChild(summary);
-            
+
             // dropdown with individual pages list (for more granular reordering/deleting in the future.)
             const nested_ul = document.createElement("ol");
-            nested_ul.setAttribute("class","nested-ol");
-            for (i = 1; i<=file.numPages;i++) {
+            nested_ul.setAttribute("class", "nested-ol");
+            for (i = 1; i <= file.numPages; i++) {
                 const nested_li = document.createElement("li");
-                nested_li.setAttribute("class","nested-li")
+                nested_li.setAttribute("class", "nested-li")
                 const page_num = document.createElement("p");
                 page_num.innerText = i
 
                 const checkbox = document.createElement("input");
-                checkbox.setAttribute("type","checkbox");
+                checkbox.setAttribute("type", "checkbox");
 
                 nested_li.appendChild(page_num);
                 nested_li.appendChild(checkbox);
@@ -79,7 +79,7 @@ window.onload = function () {
             }
             details.append(nested_ul);
             const numpg = document.createElement("span")
-            numpg.setAttribute("class","page-num")
+            numpg.setAttribute("class", "page-num")
             numpg.innerText = file.numPages
             summary.append(numpg)
             li.appendChild(details);
@@ -87,11 +87,27 @@ window.onload = function () {
         }
     }
 
+    async function restitch(deleted_pages = [], renumber = false) {
+        const response = await fetch("/restitch", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                deleted_pages: deleted_pages,
+                renumber: renumber,
+            })
+        })
+    };
+
+    // listen for renumbering checkbox
+    this.document.getElementById("renumbering").addEventListener("change", async (event) => {
+        // wait for restitching to be done, then reload.
+        await restitch([], event.currentTarget.checked);
+        reloadPDFViewer(`/files/stitched_pdfs/auto_stitched.pdf`);
+    });
+
     getInputList();
 
     // this can be called at any point automatically to reload the pdf!!
     reloadPDFViewer(`/files/stitched_pdfs/auto_stitched.pdf`);
 
-
-    
 };
