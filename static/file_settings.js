@@ -42,6 +42,9 @@ window.onload = function () {
         response = await fetch('/getInputList');
         files = await response.json();
         
+        // set dimensions of pdf viewer based on width/height
+        document.getElementById("pdf-viewer").style.width = 90*(files[0].width/files[0].height) + "vh";
+
         const list = document.getElementById("pdf-list")
         // add each pdf to the DOM
         for(const file of files) {

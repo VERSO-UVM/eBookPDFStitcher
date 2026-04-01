@@ -218,6 +218,8 @@ def get_pdf_info(file_path):
     info["fileName"] = os.path.basename(file_path)
     info["numPages"] = len(pdf_reader.pages)
     info["title"] = pdf_reader.metadata["/Title"]
+    info["width"] = pdf_reader.pages[0].mediabox.width
+    info["height"] = pdf_reader.pages[0].mediabox.height
     # more fields can be added easily later if we want to show more things.
     return info
 
