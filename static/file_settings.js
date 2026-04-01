@@ -4,6 +4,7 @@ window.onload = function () {
     const para = document.getElementById("changing_title");
     const forbiden_input = /[\\\/\:\*\?\"\<\>\|]/;
 
+
     form.addEventListener("submit", function (event) {
         event.preventDefault();
 
@@ -31,7 +32,7 @@ window.onload = function () {
         const viewer = EmbedPDF.init({
             type: 'container',
             target: container,
-            src: `${src}?t=${Date.now()}`
+            src
         });
         return viewer;
     }
@@ -47,10 +48,12 @@ window.onload = function () {
 
         const list = document.getElementById("pdf-list")
         // add each pdf to the DOM
-        for (const file of files) {
+        for (j = 0; j < files.length; j++) {
+            const file = files[j];
             console.log(file);
             const li = document.createElement("li");
             li.setAttribute("class", "pdf-li");
+            li.setAttribute("data-id", j);
 
             const details = document.createElement("details");
             const summary = document.createElement("summary");
@@ -87,13 +90,14 @@ window.onload = function () {
         }
     }
 
-    async function restitch(deleted_pages = [], renumber = false) {
+    async function restitch(deleted_pages = [], renumber = false, local_ordering = false) {
         const response = await fetch("/restitch", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 deleted_pages: deleted_pages,
                 renumber: renumber,
+                local_ordering: local_ordering
             })
         })
     };
@@ -106,7 +110,15 @@ window.onload = function () {
     });
 
     getInputList();
-
+    var sortable = Sortable.create(document.getElementById("pdf-list"), {
+        animation: 150,
+        onEnd: async function (evt) {
+            // get new order on a pdf-level basis.
+            var local_order = sortable.toArray();
+            await restitch([], document.getElementById("renumbering").checked, local_order);
+            reloadPDFViewer(`/files/stitched_pdfs/auto_stitched.pdf`);
+        }
+    });
     // this can be called at any point automatically to reload the pdf!!
     reloadPDFViewer(`/files/stitched_pdfs/auto_stitched.pdf`);
 

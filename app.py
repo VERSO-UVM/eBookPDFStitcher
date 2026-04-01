@@ -95,16 +95,19 @@ def errors():
 @app.route('/files/<path:filename>')
 def serve_file(filename):
     id = session.get("id")
-
     user_dir = os.path.join('uploaded_files', id)
     output_dir = 'output'
 
     if os.path.exists(os.path.join(user_dir, filename)):
-        return send_from_directory(user_dir, filename)
+        response = make_response(send_from_directory(user_dir, filename))
     elif os.path.exists(os.path.join(output_dir, filename)):
-        return send_from_directory(output_dir, filename)
+        response = make_response(send_from_directory(output_dir, filename))
     else:
         raise FileNotFoundError(f"File \"{filename}\" not found")
+
+    # make sure file isnt cashed so the preview updates every time
+    response.headers['Cache-Control'] = 'no-store'
+    return response
 
 @app.route("/getInputList")
 def get_file_list():
@@ -120,8 +123,11 @@ def get_file_list():
 def restitch_preview():
     id = session.get('id')
     user_directory = os.path.join('uploaded_files', id)
+    stitched_dir = os.path.join(user_directory,"stitched_pdfs")
     
     data = request.get_json()
     deleted_pages = data.get("deleted_pages") or []
     renumber = data.get("renumber", False)
-    pdf_engine.stitch_pdf(output_folder=f"{user_directory}/stitched_pdfs",input_directory=user_directory,document_name="auto_stitched",pages_to_delete=deleted_pages,renumber = renumber)
+    local_ordering = data.get("local_ordering") or []
+    
+    return pdf_engine.stitch_pdf(output_folder=stitched_dir,input_directory=user_directory,document_name="auto_stitched",pages_to_delete=deleted_pages,renumber = renumber,file_reorder=local_ordering)

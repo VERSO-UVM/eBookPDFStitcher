@@ -7,8 +7,6 @@
     <title>File Settings</title>
     <link rel="icon" href="/static/asset/favicon/favicon.ico">
     <link rel="stylesheet" href="/static/file_settings.css">
-    <script src="{{ url_for('static', filename='file_settings.js') }}"></script>
-    <script src="{{ url_for('static', filename='timer.js') }}"></script>
 
 </head>
 
@@ -60,6 +58,9 @@
         </p>
         <a href="{{ url_for('acknowledgement') }}" target="_blank"> Acknowledgement</a>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script src="{{ url_for('static', filename='file_settings.js') }}"></script>
+    <script src="{{ url_for('static', filename='timer.js') }}"></script>
 </body>
 
 </html>

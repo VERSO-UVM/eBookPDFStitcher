@@ -5,7 +5,7 @@ import os
 import shutil
 
 # This function merges multiple PDF files into a single PDF file
-def merge_pdfs(pdf_files, output_file):
+def merge_pdfs(pdf_files, output_file, file_reorder = []):
     """
     Merge multiple PDF files into a single PDF file.
 
@@ -18,7 +18,10 @@ def merge_pdfs(pdf_files, output_file):
     pdf_merger = PdfWriter()
 
     # Loop through each PDF file
-    for pdf_file in pdf_files.split(";"):
+    for num, pdf_file in enumerate(pdf_files):
+        # go in a different order if theres an order specified
+        if file_reorder:
+            pdf_file = pdf_files[int(file_reorder[num])]
         # Open the PDF file
         with open(pdf_file, 'rb') as file:
             # Create a PdfReader object
@@ -120,7 +123,7 @@ def save_remaining_pages(pdf_files, output_pdf, pages_to_save):
         pdf_writer.write(output)
         
         
-def stitch_pdf(output_folder = "output", input_directory = "uploaded_files", document_name = None, pages_to_delete = [], remove_unstitched = False, renumber = False):
+def stitch_pdf(output_folder = "output", input_directory = "uploaded_files", document_name = None, pages_to_delete = [], remove_unstitched = False, renumber = False, file_reorder=[]):
     """Merges, renumbers, and optionally cleans up a collection of PDF files.
     Parameters:
         output_folder (str): Path to the directory where the final PDF will be
@@ -147,7 +150,7 @@ def stitch_pdf(output_folder = "output", input_directory = "uploaded_files", doc
     merged_pdf = os.path.join(temp_dir, "merged.pdf")
 
     # Merge the selected PDF files into a single PDF file
-    merge_pdfs(";".join(pdf_files), merged_pdf)
+    merge_pdfs(pdf_files, merged_pdf, file_reorder)
     
     # # Define the path for the renumbered PDF file
     renumbered_pdf = os.path.join(temp_dir, "renumbered.pdf")
@@ -219,7 +222,7 @@ def get_pdf_info(file_path):
     pdf_reader = PdfReader(file_path)
     info["fileName"] = os.path.basename(file_path)
     info["numPages"] = len(pdf_reader.pages)
-    info["title"] = pdf_reader.metadata["/Title"]
+    info["title"] = pdf_reader.metadata.get("/Title", info["fileName"])
     info["width"] = pdf_reader.pages[0].mediabox.width
     info["height"] = pdf_reader.pages[0].mediabox.height
     # more fields can be added easily later if we want to show more things.
