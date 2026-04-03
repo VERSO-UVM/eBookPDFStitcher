@@ -4,7 +4,6 @@ window.onload = function () {
     const para = document.getElementById("changing_title");
     const forbiden_input = /[\\\/\:\*\?\"\<\>\|]/;
 
-
     form.addEventListener("submit", function (event) {
         event.preventDefault();
 
@@ -42,15 +41,14 @@ window.onload = function () {
         // call flask thing to retrieve all uploaded files
         response = await fetch('/getInputList');
         files = await response.json();
-
         // set dimensions of pdf viewer based on width/height
         document.getElementById("pdf-viewer").style.width = 90 * (files[0].width / files[0].height) + "vh";
 
         const list = document.getElementById("pdf-list")
+        list.innerHTML = "";
         // add each pdf to the DOM
         for (j = 0; j < files.length; j++) {
             const file = files[j];
-            console.log(file);
             const li = document.createElement("li");
             li.setAttribute("class", "pdf-li");
             li.setAttribute("data-id", j);
@@ -71,23 +69,25 @@ window.onload = function () {
                 const nested_li = document.createElement("li");
                 nested_li.setAttribute("class", "nested-li")
                 const page_num = document.createElement("p");
-                page_num.innerText = i
+                page_num.innerText = i;
 
                 const checkbox = document.createElement("input");
                 checkbox.setAttribute("type", "checkbox");
+                checkbox.setAttribute("class", "delete-box");
 
                 nested_li.appendChild(page_num);
                 nested_li.appendChild(checkbox);
                 nested_ul.appendChild(nested_li);
             }
             details.append(nested_ul);
-            const numpg = document.createElement("span")
-            numpg.setAttribute("class", "page-num")
-            numpg.innerText = file.numPages
+            const numpg = document.createElement("span");
+            numpg.setAttribute("class", "page-num");
+            numpg.innerText = file.numPages;
             summary.append(numpg)
             li.appendChild(details);
             list.appendChild(li);
         }
+        console.log(files);
     }
 
     async function restitch(deleted_pages = [], renumber = false, local_ordering = false) {
@@ -100,25 +100,45 @@ window.onload = function () {
                 local_ordering: local_ordering
             })
         })
+        reloadPDFViewer(`/files/stitched_pdfs/auto_stitched.pdf`);
     };
 
     // listen for renumbering checkbox
     this.document.getElementById("renumbering").addEventListener("change", async (event) => {
-        // wait for restitching to be done, then reload.
-        await restitch([], event.currentTarget.checked);
-        reloadPDFViewer(`/files/stitched_pdfs/auto_stitched.pdf`);
+        restitch([], event.currentTarget.checked);
     });
 
     getInputList();
+
     var sortable = Sortable.create(document.getElementById("pdf-list"), {
         animation: 150,
         onEnd: async function (evt) {
             // get new order on a pdf-level basis.
             var local_order = sortable.toArray();
-            await restitch([], document.getElementById("renumbering").checked, local_order);
-            reloadPDFViewer(`/files/stitched_pdfs/auto_stitched.pdf`);
+            restitch([], document.getElementById("renumbering").checked, local_order);
+            
+            // show reset button
+            document.getElementById("reset").style.display = "block";
         }
     });
+
+    // reset button logic
+    document.getElementById("reset").addEventListener("click", async () => {
+        restitch([], document.getElementById("renumbering").checked, []);
+        getInputList();
+    });
+
+    // delete button showing/hiding logic
+    document.getElementById("pdf-list").addEventListener('change', function () {
+        const delete_button = document.getElementById('delete-button');
+        if (document.querySelectorAll('.delete-box:checked').length > 0) {
+            delete_button.style.display = "block";
+        } else {
+            delete_button.style.display = "none";
+        }
+       
+    });
+    
     // this can be called at any point automatically to reload the pdf!!
     reloadPDFViewer(`/files/stitched_pdfs/auto_stitched.pdf`);
 

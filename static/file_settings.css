@@ -203,3 +203,16 @@ h3 {
   font-size: smaller;
   font-style: italic;
 }
+
+#settings-buttons {
+  display: flex;
+  gap: 4px;
+  justify-content:center;
+}
+#reset {
+  display:none;
+}
+#delete-button {
+  display:none;
+  background-color: red;
+}
