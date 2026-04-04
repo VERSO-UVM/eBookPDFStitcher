@@ -3,6 +3,9 @@ window.onload = function () {
     const button = document.getElementById("changing_form");
     const para = document.getElementById("changing_title");
     const forbiden_input = /[\\\/\:\*\?\"\<\>\|]/;
+    
+    var pages_to_delete = [];
+    var pdf_order = [];
 
     form.addEventListener("submit", function (event) {
         event.preventDefault();
@@ -86,6 +89,7 @@ window.onload = function () {
             summary.append(numpg)
             li.appendChild(details);
             list.appendChild(li);
+
         }
         console.log(files);
     }
@@ -105,7 +109,7 @@ window.onload = function () {
 
     // listen for renumbering checkbox
     this.document.getElementById("renumbering").addEventListener("change", async (event) => {
-        restitch([], event.currentTarget.checked);
+        restitch(pages_to_delete, event.currentTarget.checked, pdf_order);
     });
 
     getInputList();
@@ -114,9 +118,9 @@ window.onload = function () {
         animation: 150,
         onEnd: async function (evt) {
             // get new order on a pdf-level basis.
-            var local_order = sortable.toArray();
-            restitch([], document.getElementById("renumbering").checked, local_order);
-            
+            pdf_order = sortable.toArray();
+            restitch(pages_to_delete, document.getElementById("renumbering").checked, pdf_order);
+
             // show reset button
             document.getElementById("reset").style.display = "block";
         }
@@ -124,8 +128,25 @@ window.onload = function () {
 
     // reset button logic
     document.getElementById("reset").addEventListener("click", async () => {
-        restitch([], document.getElementById("renumbering").checked, []);
+        restitch([], document.getElementById("renumbering").checked);
         getInputList();
+    });
+
+    // deleting pages
+    document.getElementById("delete-button").addEventListener("click", async () => {
+        pages_to_delete = [];
+        document.getElementById("reset").style.display = "block";
+        const checkboxes = document.querySelectorAll('.delete-box');
+        for (i = 0; i < checkboxes.length; i++) {
+            const current_box = checkboxes[i];
+            if (current_box.checked) {
+                current_box.parentElement.style.backgroundColor = "#46151566";
+                pages_to_delete.push(i);
+            } else {
+                current_box.parentElement.style.backgroundColor = "";
+            }
+        }
+        restitch(pages_to_delete, document.getElementById("renumbering").checked, pdf_order);
     });
 
     // delete button showing/hiding logic
@@ -136,9 +157,9 @@ window.onload = function () {
         } else {
             delete_button.style.display = "none";
         }
-       
+
     });
-    
+
     // this can be called at any point automatically to reload the pdf!!
     reloadPDFViewer(`/files/stitched_pdfs/auto_stitched.pdf`);
 

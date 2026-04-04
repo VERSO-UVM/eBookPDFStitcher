@@ -38,13 +38,12 @@ def merge_pdfs(pdf_files, output_file, file_reorder = []):
         
         
 # This function renumbers the pages in a PDF file
-def renumber_pdf(input_pdf, output_pdf):
+def renumber_pdf(input_pdf):
     """
     Renumber pages in a PDF document.
 
     Parameters:
     - input_pdf (str): The path to the input PDF file.
-    - output_pdf (str): The path to the output PDF file with renumbered pages.
 
     """
     # Open the PDF file
@@ -56,12 +55,13 @@ def renumber_pdf(input_pdf, output_pdf):
         page = pdf_doc[page_num]
         #Since Python is 0 indexed, as to start as page 0 + 1
         text = f"Page {page_num + 1}"
-        text_coords = (0, page.rect.height - 30)
+        text_coords = (10, page.rect.height - 30)
         page.insert_text(text_coords, text)
         #pdf_doc[page_num].get_text("Page {}".format(page_num + 1))
 
     # Save the renumbered PDF file
-    pdf_doc.save(output_pdf)
+    pdf_doc.saveIncr()
+    pdf_doc.close()
 # This function deletes specified pages from a PDF file
 def delete_pages(input_pdf, pages_to_delete, output_pdf):
     """
@@ -152,19 +152,20 @@ def stitch_pdf(output_folder = "output", input_directory = "uploaded_files", doc
     # Merge the selected PDF files into a single PDF file
     merge_pdfs(pdf_files, merged_pdf, file_reorder)
     
-    # # Define the path for the renumbered PDF file
-    renumbered_pdf = os.path.join(temp_dir, "renumbered.pdf")
 
-    # # # Renumber the pages of the merged PDF file
-    if renumber:
-        renumber_pdf(merged_pdf, renumbered_pdf)
-        merged_pdf = renumbered_pdf
-    
     # Define the final output path for the PDF file after deletion
     final_output_pdf = os.path.join(output_folder, f"{document_name}.pdf")
     
     # Delete specified pages from the PDF file
     delete_pages(merged_pdf, pages_to_delete, final_output_pdf)
+    
+
+    #  Renumber the pages of the merged PDF file
+    if renumber:
+        # # Define the path for the renumbered PDF file
+        renumbered_pdf = os.path.join(temp_dir, "renumbered.pdf")
+        renumber_pdf(final_output_pdf)
+    
 
     # Remove the temporary directory and its contents
     shutil.rmtree(temp_dir)
