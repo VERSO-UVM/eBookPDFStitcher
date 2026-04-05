@@ -203,14 +203,18 @@ window.onload = function () {
                 current_box.parentElement.style.backgroundColor = "";
                 current_box.parentNode.setAttribute("data-is-deleted","false");
             }
+
         }
+           if (pages_to_delete.length == 0) {
+                document.getElementById("delete-button").style.display = "none";
+            }
         restitch(pages_to_delete, document.getElementById("renumbering").checked, pdf_order, curr_page);
     });
 
     // delete button showing/hiding logic
     document.getElementById("pdf-list").addEventListener('change', function () {
         const delete_button = document.getElementById('delete-button');
-        if (document.querySelectorAll('.delete-box:checked').length > 0) {
+        if (pages_to_delete.length > 0 || document.querySelectorAll('.delete-box:checked').length > 0) {
             delete_button.style.display = "block";
         } else {
             delete_button.style.display = "none";
