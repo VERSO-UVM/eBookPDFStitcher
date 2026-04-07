@@ -73,9 +73,24 @@ window.onload = function () {
             const details = document.createElement("details");
             const summary = document.createElement("summary");
             const title = document.createElement("span")
+            const checkbox_q = document.createElement("input");
+
             title.setAttribute("class", "pdf-title")
             title.innerText = file.title
             summary.appendChild(title)
+
+            checkbox_q.setAttribute("type", "checkbox");
+            checkbox_q.setAttribute("class", "delete-box");
+            checkbox_q.addEventListener("change", (event) => {
+                const nestedCheckboxes = li.querySelectorAll(".nested-li .delete-box");
+                nestedCheckboxes.forEach(cb => {
+                    cb.checked = event.target.checked;
+                });
+
+                // trigger the delete-button visibility check
+                document.getElementById("pdf-list").dispatchEvent(new Event("change"));
+            });
+            li.appendChild(checkbox_q);
 
             details.appendChild(summary);
 
@@ -109,7 +124,7 @@ window.onload = function () {
                 nested_li.addEventListener('click', (event) => {
                     if (!event.target.checked) {
                         const page = getRelativePage(parseInt(nested_li.parentNode.parentNode.parentNode.getAttribute("data-id")), parseInt(nested_li.firstChild.innerText));
-                        if (curr_page != page && nested_li.getAttribute("data-is-deleted")=="false") {
+                        if (curr_page != page && nested_li.getAttribute("data-is-deleted") == "false") {
                             // selection visual logic
                             document.querySelectorAll(".nested-li").forEach(el => {
                                 if (el.getAttribute("data-is-deleted") == "false") {
@@ -196,12 +211,17 @@ window.onload = function () {
         for (i = 0; i < checkboxes.length; i++) {
             const current_box = checkboxes[i];
             if (current_box.checked) {
-                current_box.parentElement.style.backgroundColor = "#90131389";
-                pages_to_delete.push(i);
-                current_box.parentNode.setAttribute("data-is-deleted","true");
+                if (current_box.parentNode.className == "nested-li") {
+                    current_box.parentElement.style.backgroundColor = "#90131389";
+                    pages_to_delete.push(i);
+                    current_box.parentNode.setAttribute("data-is-deleted", "true");
+                }
+                else if (current_box.parentNode.className == "pdf-li") {
+                    current_box.parentElement.style.backgroundColor = "#90131389";
+                }
             } else {
                 current_box.parentElement.style.backgroundColor = "";
-                current_box.parentNode.setAttribute("data-is-deleted","false");
+                current_box.parentNode.setAttribute("data-is-deleted", "false");
             }
         }
         restitch(pages_to_delete, document.getElementById("renumbering").checked, pdf_order, curr_page);
