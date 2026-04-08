@@ -180,31 +180,7 @@ window.onload = function () {
 
     getInputList();
 
-    var sortable = Sortable.create(document.getElementById("pdf-list"), {
-        animation: 150,
-        onEnd: async function (evt) {
-            // get new order on a pdf-level basis.
-            pdf_order = sortable.toArray().map(Number);
-            curr_page = getRelativePage(parseInt(evt.item.getAttribute("data-id")));
-            restitch(pages_to_delete, document.getElementById("renumbering").checked, pdf_order, curr_page);
-
-            // show reset button
-            document.getElementById("reset").style.display = "block";
-        }
-    });
-
-    // reset button logic
-    document.getElementById("reset").addEventListener("click", async () => {
-        pages_to_delete = [];
-        pdf_order = [];
-        pdfs = {};
-        restitch([], document.getElementById("renumbering").checked);
-        getInputList();
-
-    });
-
-    // deleting pages
-    document.getElementById("delete-button").addEventListener("click", async () => {
+    async function update_indices(){
         pages_to_delete = [];
         document.getElementById("reset").style.display = "block";
         const checkboxes = document.querySelectorAll('.delete-box');
@@ -234,6 +210,35 @@ window.onload = function () {
                 document.getElementById("delete-button").style.display = "none";
             }
         restitch(pages_to_delete, document.getElementById("renumbering").checked, pdf_order, curr_page);
+    }
+
+    var sortable = Sortable.create(document.getElementById("pdf-list"), {
+        animation: 150,
+        onEnd: async function (evt) {
+            update_indices();
+            // get new order on a pdf-level basis.
+            pdf_order = sortable.toArray().map(Number);
+            curr_page = getRelativePage(parseInt(evt.item.getAttribute("data-id")));
+            restitch(pages_to_delete, document.getElementById("renumbering").checked, pdf_order, curr_page);
+
+            // show reset button
+            document.getElementById("reset").style.display = "block";
+        }
+    });
+
+    // reset button logic
+    document.getElementById("reset").addEventListener("click", async () => {
+        pages_to_delete = [];
+        pdf_order = [];
+        pdfs = {};
+        restitch([], document.getElementById("renumbering").checked);
+        getInputList();
+
+    });
+
+    // deleting pages
+    document.getElementById("delete-button").addEventListener("click", async () => {
+        update_indices();
     });
 
     // delete button showing/hiding logic
