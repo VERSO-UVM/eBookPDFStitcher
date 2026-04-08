@@ -208,20 +208,25 @@ window.onload = function () {
         pages_to_delete = [];
         document.getElementById("reset").style.display = "block";
         const checkboxes = document.querySelectorAll('.delete-box');
+        var offset = 0;
         for (i = 0; i < checkboxes.length; i++) {
             const current_box = checkboxes[i];
             if (current_box.checked) {
                 if (current_box.parentNode.className == "nested-li") {
                     current_box.parentElement.style.backgroundColor = "#90131389";
-                    pages_to_delete.push(i);
+                    pages_to_delete.push(i - offset);
                     current_box.parentNode.setAttribute("data-is-deleted", "true");
                 }
                 else if (current_box.parentNode.className == "pdf-li") {
                     current_box.parentElement.style.backgroundColor = "#90131389";
+                    offset = offset + 1;
                 }
             } else {
                 current_box.parentElement.style.backgroundColor = "";
                 current_box.parentNode.setAttribute("data-is-deleted", "false");
+                if(current_box.parentNode.className == "pdf-li"){
+                    offset = offset + 1;
+                }
             }
 
         }
