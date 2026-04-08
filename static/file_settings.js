@@ -215,14 +215,15 @@ window.onload = function () {
     var sortable = Sortable.create(document.getElementById("pdf-list"), {
         animation: 150,
         onEnd: async function (evt) {
-            pages_to_delete = get_pages_to_delete();
             // get new order on a pdf-level basis.
             pdf_order = sortable.toArray().map(Number);
             curr_page = getRelativePage(parseInt(evt.item.getAttribute("data-id")));
-            restitch(pages_to_delete, document.getElementById("renumbering").checked, pdf_order, curr_page);
+            await restitch(get_pages_to_delete(), document.getElementById("renumbering").checked, pdf_order, curr_page);
 
             // show reset button
             document.getElementById("reset").style.display = "block";
+            const event = new Event('click');
+            await document.getElementById('delete-button').dispatchEvent(event);
         }
     });
 
