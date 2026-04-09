@@ -9,23 +9,47 @@ window.onload = function () {
     var pdfs = {};
     var curr_page = 0;
 
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
 
-        const file_name = document.getElementById("file_name").value.trim();
-        if (forbiden_input.test(file_name)) {
-            alert('You have entered a forbidden input. \nForbiden input are : \\ , / , : , * , ? , " , < , > , | ')
-        }
-        else {
-            form.innerHTML = "<br>"
-            para.innerHTML = `You have chosen the name '${file_name}' — feel free to click the button below to download your final result`;
-            button.innerHTML = `
-                <form action="/file_settings" method='POST'>
-                    <input type='hidden' name='file_name' value='${file_name}'>
-                    <button type='submit' name='action' value='stitch'>Download PDF</button>
-                </form>`;
+    document.getElementById("file_name").addEventListener("input", (event) => {
+        const file_name = event.target.value;
+        const download_btn = document.getElementById("download");
+        const alert_text = document.getElementById("alert")
+        download_btn.disabled = true;
+        alert_text.innerText = "";
+        if (file_name == "") {
+            alert_text.style.display = "block";
+            alert_text.innerText = 'File name cannot be empty';
+        } else if (forbiden_input.test(file_name)) {
+            alert_text.style.display = "block";
+            alert_text.innerText = 'File name cannot contain \\ , / , : , * , ? , " , < , > , |'
+        } else {
+            alert_text.style.display = "none";
+            download_btn.disabled = false;
         }
     });
+
+    document.getElementById("download").addEventListener("click", async function (event) {
+        event.preventDefault();
+
+        const file_name = document.getElementById("file_name").value;
+        const file_format = document.getElementById("file-format").value;
+        const response = await fetch("/download_pdf", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ file_name })
+        });
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${file_name}.pdf`;
+        a.click();
+        URL.revokeObjectURL(url);
+        const restart_btn = document.getElementById("restart");
+        restart_btn.style.display = "block";
+    });
+
 
     async function reloadPDFViewer(src, page_number = 1) {
         const { default: EmbedPDF } = await import('https://cdn.jsdelivr.net/npm/@embedpdf/snippet@2/dist/embedpdf.js');
@@ -180,7 +204,7 @@ window.onload = function () {
 
     getInputList();
 
-    async function get_pages_to_delete(){
+    async function get_pages_to_delete() {
         pages_to_delete = [];
         document.getElementById("reset").style.display = "block";
         const checkboxes = document.querySelectorAll('.delete-box');
@@ -200,15 +224,15 @@ window.onload = function () {
             } else {
                 current_box.parentElement.style.backgroundColor = "";
                 current_box.parentNode.setAttribute("data-is-deleted", "false");
-                if(current_box.parentNode.className == "pdf-li"){
+                if (current_box.parentNode.className == "pdf-li") {
                     offset = offset + 1;
                 }
             }
 
         }
-           if (pages_to_delete.length == 0) {
-                document.getElementById("delete-button").style.display = "none";
-            }
+        if (pages_to_delete.length == 0) {
+            document.getElementById("delete-button").style.display = "none";
+        }
         return pages_to_delete;
     };
 
@@ -258,15 +282,15 @@ window.onload = function () {
             } else {
                 current_box.parentElement.style.backgroundColor = "";
                 current_box.parentNode.setAttribute("data-is-deleted", "false");
-                if(current_box.parentNode.className == "pdf-li"){
+                if (current_box.parentNode.className == "pdf-li") {
                     offset = offset + 1;
                 }
             }
 
         }
-           if (pages_to_delete.length == 0) {
-                document.getElementById("delete-button").style.display = "none";
-            }
+        if (pages_to_delete.length == 0) {
+            document.getElementById("delete-button").style.display = "none";
+        }
         restitch(pages_to_delete, document.getElementById("renumbering").checked, pdf_order, curr_page);
     });
 

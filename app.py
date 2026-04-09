@@ -52,14 +52,15 @@ def index_buttons():
         return render_template("file_settings.html")
 
 
-@app.route("/file_settings", methods=["POST"])
+@app.route("/download_pdf", methods=["POST"])
 def settings_buttons():
     id = session.get('id')
     user_directory = os.path.join(upload, id)
-    stitched_pdf_dir = os.path.join(user_directory,"stitched_pdfs") 
-    file_name = request.form.get("file_name")
-    
-    try :
+    stitched_pdf_dir = os.path.join(user_directory,"stitched_pdfs")
+    data = request.get_json()
+    file_name = data.get("file_name") or "unnamed"
+
+    try:
         duplicate = shutil.copy(f"{stitched_pdf_dir}/auto_stitched.pdf",f"output/{file_name}.pdf")
         shutil.rmtree(user_directory)
         return send_file(duplicate, as_attachment=True)

@@ -34,7 +34,8 @@
                 <p>Drag and drop each section to reorder. Click each section to select pages to exclude.</p>
                 <ol id="pdf-list">
                 </ol>
-                <div id="settings-buttons"><button id="delete-button">Exclude Selected</button><button id="reset">Reset</button></div>
+                <div id="settings-buttons"><button id="delete-button">Exclude Selected</button><button
+                        id="reset">Reset</button></div>
             </div>
             <div class=option>
                 <h3>Page Numbers</h3>
@@ -45,9 +46,19 @@
             <div id="changing_form" class="option">
                 <form id="choosing_a_name">
                     <input type="text" id="file_name" name="file_name" placeholder="file name" required />
-                    <button type="submit">Submit</button>
+                    <select type="dropdown" id="file-format">
+                        <option value="pdf" selected="selected">.pdf</option>
+                        <option value="docx">.docx</option>
+                        <option value="epub">.epub</option>
+                        <option value="txt">.txt</option>
+                        <option value="blahblahblah">.blahblahblah</option>
+                    </select>
+                    <button id="download" disabled type="button">Download</button>
+                    <button id="restart" type="submit">Restart</button>
                 </form>
+                <div id="alert"></div>
             </div>
+            
         </div>
 
 
