@@ -6,6 +6,7 @@ import pdf_engine
 import os
 import shutil
 import uuid
+import format_converter
 
 app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'cachelib'
@@ -42,7 +43,11 @@ def index_buttons():
         user_directory = f"{upload}/{id}"
         
         for i in files:
-            i.save(f"{user_directory}/{i.filename}")   
+            _, ext = os.path.splitext(i.filename)
+            name = f"{user_directory}/{i.filename}"
+            i.save(name)
+            if ext != ".pdf":
+                format_converter.other_format_to_pdf(name)
         
         # make directory with autostitched pdf for preview purposes 
         stitch_dir = f"{user_directory}/stitched_pdfs"
