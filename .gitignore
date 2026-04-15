@@ -1,9 +1,8 @@
 .vscode
-testing_file
-pdf_files
 .DS_Store
 /test
 __pycache__
 output
 uploaded_files
 static/session_info
+testing_file
