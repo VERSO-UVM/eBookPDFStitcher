@@ -47,7 +47,14 @@ def index_buttons():
             name = f"{user_directory}/{i.filename}"
             i.save(name)
             if ext != ".pdf":
-                format_converter.other_format_to_pdf(name)
+                #TODO : This work very well with .docx file (as long as every character are in the latin alphabet, we're gonna have to refactor a lot of thing for other uncommon character)
+                #But this mess up the formatting of slides, and of spreadsheet, as well as not accepting csv's so far
+                try: 
+                    format_converter.other_format_to_pdf(name)
+                except Exception as e :
+                    #TODO Resolve issue when faced with uncommon unicode character such as the german eszet 
+                    print(e)
+                    
         
         # make directory with autostitched pdf for preview purposes 
         stitch_dir = f"{user_directory}/stitched_pdfs"
