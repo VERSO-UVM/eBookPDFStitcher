@@ -6,37 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index Page</title>
     <link rel="icon" href="/static/asset/favicon/favicon.ico">
+    <link rel="stylesheet" href="/static/global.css">
     <link rel="stylesheet" href="/static/index.css">
-    <script src="{{ url_for('static', filename='timer.js') }}"></script>
 </head>
 
 <body>
     <header>
-        <img src="static\asset\UVM_Logo_Primary_Horiz_WhiteGR.png" id="uvm" alt="logo of UVM">
-        <h1> Pdf Stitcher</h1>
-        <p>
-            Hello! This website is here to help you stitch together multiple pdf together.
-        </p>
-        <div> 
-            Time remaining <img src="static\asset\information_logo.png" id="information" alt="information logo">:
+        <div id="header-top">
+            <img src="static\asset\UVM_Logo_Primary_Horiz_WhiteGR.png" id="uvm" alt="logo of UVM">
+            <h1> Ebook Stitcher </h1>
+            <div id="timer">
+                <p id="timer-display"></p>
+                remaining <img src="static\asset\information_logo.png" id="information" alt="information logo">
+            </div>
+            <div id="tooltip">
+                After two hours, your session will expire and all uploaded files will be purged for privacy.
+            </div>
         </div>
+        <p>
+            Upload files below to begin the merging process.
+        </p>
 
-        <span>In order to have a better amount of privacy, and less holding of private data, we will shut your session
-            after 30 minute of time spent on this website. After this time, even if you have not downloaded your
-            stitched pdf, we will wipe all uploaded file.
-        </span>
-
-
-        <p id="timer-display"></p>
     </header>
-    <form action="/" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" multiple accept=".pdf,.docx, .xlsx" required />
-        <button type="submit" name="action" value="upload">Upload</button>
-    </form>
+    <div id="flex-content">
+        <form action="/" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" multiple accept=".pdf,.docx, .xlsx" required />
+            <button type="submit" name="action" value="upload">Upload</button>
+        </form>
+    </div>
     <footer>
         <p>This website has been developed by Orca (Open Research Community Accelerator) at UVM </p>
-        <a href="{{ url_for('acknowledgement') }}" target="_blank"> Acknowledgement</a>
+        <a href="{{ url_for('acknowledgement') }}" target="_blank">Acknowledgements</a>
     </footer>
 </body>
+<script src="{{ url_for('static', filename='timer.js') }}"></script>
 
 </html>

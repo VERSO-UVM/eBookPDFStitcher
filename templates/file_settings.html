@@ -6,24 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Settings</title>
     <link rel="icon" href="/static/asset/favicon/favicon.ico">
+    <link rel="stylesheet" href="/static/global.css">
     <link rel="stylesheet" href="/static/file_settings.css">
 
 </head>
 
 <body>
     <header>
-        <div id="header-content">
+        <div id="header-top">
             <img src="static\asset\UVM_Logo_Primary_Horiz_WhiteGR.png" id="uvm" alt="logo of UVM">
             <!-- When we get a real logo of orca, we might want to replace this -->
             <!-- <img src ="static\asset\verso_logo.png" id ="verso" alt ="logo of Verso"> -->
             <!-- TODO change the icon and make it fit -->
             <h1>File Settings</h1>
-            <p> Time remaining: <span id="timer-display"></span></p>
+            <p> <span id="timer-display"></span> remaining</p>
             <a href="{{ url_for('index') }}" id="home_button">← Home</a>
 
         </div>
-        <p id="changing_title">Choose a name for the output PDF</p>
-
     </header>
     <div id="flex-content">
 
@@ -67,7 +66,7 @@
         <p>
             This website has been developed by Orca (Open Research Community Accelerator) at UVM
         </p>
-        <a href="{{ url_for('acknowledgement') }}" target="_blank"> Acknowledgement</a>
+        <a href="{{ url_for('acknowledgement') }}" target="_blank"> Acknowledgements</a>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script src="{{ url_for('static', filename='file_settings.js') }}"></script>

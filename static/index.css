@@ -1,73 +1,28 @@
-body {
-    position: absolute;
-    top: 50%;
-    left :40%;
-    font-family: Arial, sans-serif;
-    background-color: lightgray;
-    margin: 0;
-    padding: 0;
-}
-#uvm {
-  position: absolute;
-  top :0;
-  left :0;
-  border-radius: 4px;
-  padding: 5px;
-  width: 160px;
-}
+
 #information{
   position: relative;
   padding: 3px;
   width: 10px;
+  margin:-4px;
 }
 
-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background-color: #154734;
-    color: white;
-    padding: 10px;
-    text-align: center;
+#timer:hover ~ #tooltip { 
+  visibility: visible;
 }
 
-a{
-  color:inherit;
-}
-a:hover{
-  color:gray;
-}
-button {
-    background-color: #154734;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-
-}
-
-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    text-align: center;
-    background-color: #154734;
-    color: white;
-    padding: 24px;
-}
-
-div{
-margin:20px;
-}
-
-span {
-display:none;
-margin:20px;
-}
-
-div:hover ~ span {
-display:block;
+#tooltip {
+  position: absolute;
+  top: 10vh;
+  right: 10px;
+  display: inline-block;
+  cursor: pointer;
+  width: 200px;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #ffffff;
+  text-align: center;
+  padding: 10px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  visibility: hidden;
 }
