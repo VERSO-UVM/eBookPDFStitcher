@@ -8,6 +8,10 @@
     <link rel="icon" href="/static/asset/favicon/favicon.ico">
     <link rel="stylesheet" href="/static/global.css">
     <link rel="stylesheet" href="/static/index.css">
+
+    <script
+        src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
 </head>
 
 <body>
@@ -28,10 +32,11 @@
         </p>
 
     </header>
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
     <div id="flex-content">
         <form action="/" method="POST" enctype="multipart/form-data">
-            <input type="file" name="file" multiple accept=".pdf,.docx, .xlsx" required />
-            <button type="submit" name="action" value="upload">Upload</button>
+            <input type="file" name="file" class="filepond" data-allow-reorder="true" multiple />
+            <button type="submit" id="submit-button" name="action" value="upload" disabled>Continue</button>
         </form>
     </div>
     <footer>
@@ -40,5 +45,30 @@
     </footer>
 </body>
 <script src="{{ url_for('static', filename='timer.js') }}"></script>
+<script>
+
+    FilePond.registerPlugin(FilePondPluginFileValidateType);
+    const inputElement = document.querySelector('input[type="file"]');
+    const pond = FilePond.create(inputElement, {
+        acceptedFileTypes: ['application/pdf', 'application/docx'],
+        dropOnElement: false,
+        dropOnPage: true,
+        storeAsFile: true,
+        itemInsertInterval: 10,
+        onupdatefiles: (files) => {
+        if ((files.length == 0) || files.some(f => f.status === FilePond.FileStatus.LOAD_ERROR)) {
+            document.getElementById("submit-button").disabled = true;
+        } else {
+            document.getElementById("submit-button").disabled = false;
+        }
+    }
+    });
+    FilePond.parse(document.body);
+
+
+
+
+</script>
+
 
 </html>

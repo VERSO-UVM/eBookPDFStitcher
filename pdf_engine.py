@@ -25,12 +25,15 @@ def merge_pdfs(pdf_files, output_file, file_reorder = []):
         # Open the PDF file
         with open(pdf_file, 'rb') as file:
             # Create a PdfReader object
-            pdf_reader = PdfReader(file)
-
-            # Loop through each page in the PDF file
-            for page_num in range(len(pdf_reader.pages)):
-                # Add the page to the PdfWriter object
-                pdf_merger.add_page(pdf_reader.pages[page_num])
+            try:
+                pdf_reader = PdfReader(file)
+                 # Loop through each page in the PDF file
+                for page_num in range(len(pdf_reader.pages)):
+                    # Add the page to the PdfWriter object
+                    pdf_merger.add_page(pdf_reader.pages[page_num])
+            except Exception as e:
+                continue
+            
 
     # Write the merged PDF file to the output file
     with open(output_file, 'wb') as output:
@@ -226,7 +229,6 @@ def get_pdf_info(file_path):
     info["title"] = pdf_reader.metadata.get("/Title", info["fileName"])
     info["width"] = pdf_reader.pages[0].mediabox.width
     info["height"] = pdf_reader.pages[0].mediabox.height
-    # more fields can be added easily later if we want to show more things.
     return info
 
 # moved this to a separate function since it's used more than once
