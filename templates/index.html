@@ -50,7 +50,8 @@
     FilePond.registerPlugin(FilePondPluginFileValidateType);
     const inputElement = document.querySelector('input[type="file"]');
     const pond = FilePond.create(inputElement, {
-        acceptedFileTypes: ['application/pdf', 'application/docx'],
+        acceptedFileTypes: ['application/pdf', 
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
         dropOnElement: false,
         dropOnPage: true,
         storeAsFile: true,
