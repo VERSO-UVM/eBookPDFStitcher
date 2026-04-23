@@ -27,8 +27,9 @@ def index():
     response = make_response(render_template("index.html"))
     id = session.get('id')
     upload_dir = os.path.join(upload, id)
-    if(not os.path.isdir(upload_dir)):
-        os.mkdir(upload_dir)
+    if(os.path.isdir(upload_dir)):
+        shutil.rmtree(upload_dir)
+    os.mkdir(upload_dir)
     return response
 
 @app.route("/", methods=["POST"])

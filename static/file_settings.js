@@ -32,7 +32,6 @@ window.onload = function () {
         event.preventDefault();
 
         const file_name = document.getElementById("file_name").value;
-        const file_format = document.getElementById("file-format").value;
         const response = await fetch("/download_pdf", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
