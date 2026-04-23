@@ -63,3 +63,10 @@ footer {
   align-items: flex-end;
   gap:10px;
 }
+div {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  margin:20px
+}
