@@ -3,6 +3,10 @@ from PyPDF2 import PdfReader, PdfWriter, PdfFileReader
 import fitz
 import os
 import shutil
+from gotenberg_client import GotenbergClient
+## gottenberg client only lets me use pathlib for file handling, couldn't use os :(
+from pathlib import Path
+import subprocess
 
 # This function merges multiple PDF files into a single PDF file
 def merge_pdfs(pdf_files, output_file, file_reorder = []):
@@ -226,7 +230,7 @@ def get_pdf_info(file_path):
     pdf_reader = PdfReader(file_path)
     info["fileName"] = os.path.basename(file_path)
     info["numPages"] = len(pdf_reader.pages)
-    info["title"] = pdf_reader.metadata.get("/Title", info["fileName"])
+    info["title"] = pdf_reader.metadata.get("/Title", os.path.splitext(info["fileName"])[0])
     info["width"] = pdf_reader.pages[0].mediabox.width
     info["height"] = pdf_reader.pages[0].mediabox.height
     return info
@@ -239,3 +243,15 @@ def get_pdf_files(directory_path):
         if file.endswith(".pdf"):
             pdf_files.append(os.path.join(directory_path, file))
     return pdf_files
+
+def convert_to_pdf(file_path, delete_original = True):
+    file = Path(file_path)
+
+    with GotenbergClient("http://localhost:3000") as client:
+        with client.libre_office.to_pdf() as route:
+            response = route.convert(file).run()
+            new_file_path = file.with_suffix(".pdf")
+            response.to_file(new_file_path)
+    if delete_original:
+        os.remove(file_path)
+    return new_file_path

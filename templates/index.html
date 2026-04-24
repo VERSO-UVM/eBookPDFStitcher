@@ -51,7 +51,11 @@
     const inputElement = document.querySelector('input[type="file"]');
     const pond = FilePond.create(inputElement, {
         acceptedFileTypes: ['application/pdf', 
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'text/csv',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+    ],
         dropOnElement: false,
         dropOnPage: true,
         storeAsFile: true,
