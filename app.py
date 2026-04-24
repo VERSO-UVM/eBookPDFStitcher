@@ -39,7 +39,6 @@ def index_buttons():
     if action == "upload":
         files = request.files.getlist("file")
         # save each file in the uploaded_files folder
-        # TODO: eventually move to static folder for embedding pdf viewing
         id = session.get('id')
         user_directory = f"{upload}/{id}"
         
