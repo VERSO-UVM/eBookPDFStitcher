@@ -7,6 +7,7 @@ import os
 import shutil
 import uuid
 import format_converter
+import subprocess
 
 app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'cachelib'
@@ -38,24 +39,25 @@ def index_buttons():
     action = request.form.get("action")
     if action == "upload":
         files = request.files.getlist("file")
-        # save each file in the uploaded_files folder
+        
         id = session.get('id')
         user_directory = f"{upload}/{id}"
         
-        for i in files:
-            _, ext = os.path.splitext(i.filename)
-            name = f"{user_directory}/{i.filename}"
-            i.save(name)
-            if ext != ".pdf":
-                #TODO : This work very well with .docx file (as long as every character are in the latin alphabet, we're gonna have to refactor a lot of thing for other uncommon character)
-                #But this mess up the formatting of slides, and of spreadsheet, as well as not accepting csv's so far
-                try: 
-                    format_converter.other_format_to_pdf(name)
-                except Exception as e :
-                    #TODO Resolve issue when faced with uncommon unicode character such as the german eszet 
-                    print(e)
-                    
+        # start gotenberg with docker
+        subprocess.Popen([
+            "docker", "run", "--rm",
+            "-p", "3000:3000",
+            "gotenberg/gotenberg:8"
+        ])
         
+        for i in files:
+            i.save(os.path.join(user_directory, i.filename))
+            
+            ext = os.path.splitext(i.filename)[1]
+            if ext != ".pdf":
+                converted_path = pdf_engine.convert_to_pdf(f"{user_directory}/{i.filename}",False)
+
+                   
         # make directory with autostitched pdf for preview purposes 
         stitch_dir = f"{user_directory}/stitched_pdfs"
         os.makedirs(stitch_dir, exist_ok=True)
