@@ -25,6 +25,12 @@ def index():
         id = str(uuid.uuid1())
         session['id'] = id
         return redirect("/")
+    # start gotenberg with docker
+    subprocess.Popen([
+        "docker", "run", "--rm",
+        "-p", "3000:3000",
+        "gotenberg/gotenberg:8"
+    ])
     response = make_response(render_template("index.html"))
     id = session.get('id')
     upload_dir = os.path.join(upload, id)
@@ -42,13 +48,6 @@ def index_buttons():
         
         id = session.get('id')
         user_directory = f"{upload}/{id}"
-        
-        # start gotenberg with docker
-        subprocess.Popen([
-            "docker", "run", "--rm",
-            "-p", "3000:3000",
-            "gotenberg/gotenberg:8"
-        ])
         
         for i in files:
             i.save(os.path.join(user_directory, i.filename))
