@@ -131,7 +131,9 @@ def get_file_list():
     file_list = []
     pdf_files = pdf_engine.get_pdf_files(user_dir)
     for pdf in pdf_files:
-        file_list.append(pdf_engine.get_pdf_info(pdf))
+        info = pdf_engine.get_pdf_info(pdf)
+        if info is not None:
+            file_list.append(info)
     return file_list
 
 @app.route("/restitch", methods=["POST"])
