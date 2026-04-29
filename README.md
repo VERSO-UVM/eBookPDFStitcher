@@ -2,9 +2,13 @@
 
 ## Overview
 
-This repository contains a simple application, initially developed as a Python script, designed to address the specific need of stitching together PDFs. The primary use case is to facilitate the creation of lendable digital copies of books for libraries. Publishers often release books with chapters in separate PDF documents, and this tool aims to provide an easy and cost-effective solution for combining them into a single PDF.
+The eBookPDFStitcher application addresses the needs of the UVM library to combine multiple PDFs into a single file. The primary use case is to facilitate the creation of lendable digital copies of books for libraries. Publishers often release books with chapters in separate PDF documents, and this tool aims to provide an easy and cost-effective solution for combining them into a single PDF. The tool can also handle file inputs of types docx, xlsx, csv, pptx, png, jpeg, and jpg. 
 
-The project started as a basic Python script with a simple user interface. Users can select a folder containing PDFs (assuming file names are in descending order) and specify a location to save the combined file. The initial version served its purpose and received positive feedback during a demonstration to the primary user. Subsequently, there was a request to explore options such as turning it into a Chrome extension or a standalone application for more convenient use.
+The project is currently locally hosted with Flask. The front-end provides the user with prompts to browse or drag/drop files onto the page and then displays the output in a scrollable window. The user can also delete pages and reorder files to their liking. Once the output is sufficient, they are able to download the file directly to their local machine.
+
+### Future work
+We plan to host this application on a server so that it is accessible by not only UVM, but other universities to provide a free alternative to the Adobe paid software.
+
 
 ## Table of Contents
 
@@ -14,14 +18,14 @@ The project started as a basic Python script with a simple user interface. Users
 - [License](#license)
 - [Acknowledgements](#acknowledgements)
 
-## Installation
-**Clone the repository**
+## Installation and Setup
+**Clone the repository**<br>
 git clone [https://github.com/yourusername/yourproject.git](https://github.com/VERSO-UVM/eBookPDFStitcher.git)
 
-**Navigate to the project directory**
-pdf_files contain sample pdfs for testing scripts
+**Navigate to the project directory**<br>
+The testing_file directory contain sample pdfs for testing scripts
 
-**Install dependencies**
+**Install dependencies**<br>
 You will need to install the following Python Packages
 * PySimpleGUI
 * PyPDF2 
@@ -29,6 +33,9 @@ You will need to install the following Python Packages
 * os
 * tempfile
 * shutil
+
+**Running the application**<br>
+`flask --app app.py run`
 
 # Usage
 
