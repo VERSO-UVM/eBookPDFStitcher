@@ -1,7 +1,6 @@
 from flask import Flask, request, render_template, send_file, make_response, redirect, flash, session, send_from_directory
 from flask_session import Session
 from cachelib.file import FileSystemCache
-from datetime import  timedelta
 import pdf_engine
 import os
 import shutil
@@ -25,6 +24,12 @@ def index():
         id = str(uuid.uuid1())
         session['id'] = id
         return redirect("/")
+    # start gotenberg with docker
+    subprocess.Popen([
+        "docker", "run", "--rm",
+        "-p", "3000:3000",
+        "gotenberg/gotenberg:8"
+    ])
     response = make_response(render_template("index.html"))
     id = session.get('id')
     upload_dir = os.path.join(upload, id)
@@ -42,13 +47,6 @@ def index_buttons():
         
         id = session.get('id')
         user_directory = f"{upload}/{id}"
-        
-        # start gotenberg with docker
-        subprocess.Popen([
-            "docker", "run", "--rm",
-            "-p", "3000:3000",
-            "gotenberg/gotenberg:8"
-        ])
         
         for i in files:
             i.save(os.path.join(user_directory, i.filename))
@@ -131,7 +129,9 @@ def get_file_list():
     file_list = []
     pdf_files = pdf_engine.get_pdf_files(user_dir)
     for pdf in pdf_files:
-        file_list.append(pdf_engine.get_pdf_info(pdf))
+        info = pdf_engine.get_pdf_info(pdf)
+        if info is not None:
+            file_list.append(info)
     return file_list
 
 @app.route("/restitch", methods=["POST"])

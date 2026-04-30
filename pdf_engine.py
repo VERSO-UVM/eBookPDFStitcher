@@ -6,7 +6,8 @@ import shutil
 from gotenberg_client import GotenbergClient
 ## gottenberg client only lets me use pathlib for file handling, couldn't use os :(
 from pathlib import Path
-import subprocess
+from PIL import Image
+
 
 # This function merges multiple PDF files into a single PDF file
 def merge_pdfs(pdf_files, output_file, file_reorder = []):
@@ -227,12 +228,18 @@ def reorder_pdf(pdf_path: str, new_order=[], output_directory=None):
 # get info of a pdf. used for reordering.
 def get_pdf_info(file_path):
     info = {}
-    pdf_reader = PdfReader(file_path)
-    info["fileName"] = os.path.basename(file_path)
-    info["numPages"] = len(pdf_reader.pages)
-    info["title"] = pdf_reader.metadata.get("/Title", os.path.splitext(info["fileName"])[0])
-    info["width"] = pdf_reader.pages[0].mediabox.width
-    info["height"] = pdf_reader.pages[0].mediabox.height
+    try:
+        pdf_reader = PdfReader(file_path)
+        if len(pdf_reader.pages) == 0:
+            return None
+        metadata = pdf_reader.metadata or {}
+        info["fileName"] = os.path.basename(file_path)
+        info["numPages"] = len(pdf_reader.pages)
+        info["title"] = metadata.get("/Title", os.path.splitext(info["fileName"])[0])
+        info["width"] = pdf_reader.pages[0].mediabox.width
+        info["height"] = pdf_reader.pages[0].mediabox.height
+    except Exception:
+        return None
     return info
 
 # moved this to a separate function since it's used more than once
@@ -246,12 +253,58 @@ def get_pdf_files(directory_path):
 
 def convert_to_pdf(file_path, delete_original = True):
     file = Path(file_path)
-
-    with GotenbergClient("http://localhost:3000") as client:
-        with client.libre_office.to_pdf() as route:
-            response = route.convert(file).run()
-            new_file_path = file.with_suffix(".pdf")
-            response.to_file(new_file_path)
+    suffix = file.suffix[1:]
+    
+    new_file_path = file.with_suffix(".pdf")
+    
+    if suffix == "pdf":
+        return file_path
+    
+    if suffix in ["docx","xlsx","csv","pptx"]:
+        with GotenbergClient("http://localhost:3000") as client:
+            with client.libre_office.to_pdf() as route:
+                response = route.convert(file).run()
+                response.to_file(new_file_path)
+    elif suffix in ["png","jpeg","jpg"]:
+        pdf = fitz.open()
+        # get dimensions of img
+        with Image.open(file) as img:
+            width, height = img.size
+            page = pdf.new_page(width=width,height=height)
+            page.insert_image((0,0,width,height),filename=file)
+        
+        pdf.set_metadata({"title": file.stem})
+        pdf.save(new_file_path)
+        pdf.close()
+        
+    # commented out because it doesn't work well
+    # elif suffix in ["mp4"]:
+    #    # make new pdf
+    #     pdf = fitz.open()
+    #     page = pdf.new_page()
+    
+    #     with open(file_path, "rb") as f:
+    #         video_data = f.read()
+    #         pdf.embfile_add(
+    #             file.name, 
+    #             video_data, 
+    #             None
+    #         )
+    #         file_annot = page.add_file_annot(
+    #         point=fitz.Point(100, 100),
+    #         buffer_=video_data,
+    #         filename=file.name,
+    #         icon="Paperclip"
+    #         )
+    #     file_annot.update()
+    #     pdf.save(new_file_path)
+    #     #     writer = PdfWriter()
+    #     # writer.add_blank_page(width=1920,height=1080)
+        
+    #     # with open(file_path, "rb") as f:
+    #     #     writer.add_attachment(file.stem, f.read())
+    #     # with open(new_file_path, "wb") as f:
+    #     #     writer.write(f)
     if delete_original:
         os.remove(file_path)
     return new_file_path
