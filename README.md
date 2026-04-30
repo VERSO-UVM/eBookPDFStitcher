@@ -43,8 +43,10 @@ As well as Docker
 
 
 **Running the application**<br>
-`flask --app app.py run`
-
+`flask --app app.py run`<br>
+or <br>
+`python -m flask --app app.py run ` <br>
+You can add the `--debug` flag at the end of the command if you are actively working on the project, which will alow you to have your change carried over to the webpage when you save your work and reload the page
 # Usage
 
 This project is for general use in stitching together sequencial PDFs while following the copyright for those documents. 
