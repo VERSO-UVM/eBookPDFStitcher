@@ -5,7 +5,6 @@ import pdf_engine
 import os
 import shutil
 import uuid
-import format_converter
 import subprocess
 
 app = Flask(__name__)
