@@ -27,12 +27,20 @@ The testing_file directory contain sample pdfs for testing scripts
 
 **Install dependencies**<br>
 You will need to install the following Python Packages
-* PySimpleGUI
 * PyPDF2 
 * fitz
 * os
-* tempfile
 * shutil
+* Flask
+* Flask-Session
+* cachelib
+* uuid
+* gotenberg-client
+* pathlib
+* Pillow
+
+As well as Docker
+
 
 **Running the application**<br>
 `flask --app app.py run`
