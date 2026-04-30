@@ -1,0 +1,310 @@
+
+from PyPDF2 import PdfReader, PdfWriter, PdfFileReader
+import fitz
+import os
+import shutil
+from gotenberg_client import GotenbergClient
+## gottenberg client only lets me use pathlib for file handling, couldn't use os :(
+from pathlib import Path
+from PIL import Image
+
+
+# This function merges multiple PDF files into a single PDF file
+def merge_pdfs(pdf_files, output_file, file_reorder = []):
+    """
+    Merge multiple PDF files into a single PDF file.
+
+    Parameters:
+    - pdf_files (str): A string containing paths to PDF files separated by ';'.
+    - output_file (str): The path to the output merged PDF file.
+
+    """
+    # Create a PdfWriter object
+    pdf_merger = PdfWriter()
+
+    # Loop through each PDF file
+    for num, pdf_file in enumerate(pdf_files):
+        # go in a different order if theres an order specified
+        if file_reorder:
+            pdf_file = pdf_files[int(file_reorder[num])]
+        # Open the PDF file
+        with open(pdf_file, 'rb') as file:
+            # Create a PdfReader object
+            try:
+                pdf_reader = PdfReader(file)
+                 # Loop through each page in the PDF file
+                for page_num in range(len(pdf_reader.pages)):
+                    # Add the page to the PdfWriter object
+                    pdf_merger.add_page(pdf_reader.pages[page_num])
+            except Exception as e:
+                continue
+            
+
+    # Write the merged PDF file to the output file
+    with open(output_file, 'wb') as output:
+        pdf_merger.write(output)
+        
+        
+# This function renumbers the pages in a PDF file
+def renumber_pdf(input_pdf):
+    """
+    Renumber pages in a PDF document.
+
+    Parameters:
+    - input_pdf (str): The path to the input PDF file.
+
+    """
+    # Open the PDF file
+    pdf_doc = fitz.open(input_pdf)
+
+    # Loop through each page in the PDF file
+    for page_num in range(len(pdf_doc)):
+        #Find the page to be renumbered 
+        page = pdf_doc[page_num]
+        #Since Python is 0 indexed, as to start as page 0 + 1
+        text = f"Page {page_num + 1}"
+        text_coords = (10, page.rect.height - 30)
+        page.insert_text(text_coords, text)
+        #pdf_doc[page_num].get_text("Page {}".format(page_num + 1))
+
+    # Save the renumbered PDF file
+    pdf_doc.saveIncr()
+    pdf_doc.close()
+# This function deletes specified pages from a PDF file
+def delete_pages(input_pdf, pages_to_delete, output_pdf):
+    """
+    Delete specified pages from a PDF document.
+
+    Parameters:
+    - input_pdf (str): The path to the input PDF file.
+    - pages_to_delete (list): A list of page numbers to delete.
+    - output_pdf (str): The path to the output PDF file after deleting pages.
+
+    """
+    # Create a PdfReader object
+    pdf_reader = PdfReader(input_pdf)
+
+    # Create a PdfWriter object
+    pdf_writer = PdfWriter()
+
+
+
+    # Loop through each page in the PDF file
+    for page_num in range(len(pdf_reader.pages)):
+        # If the page is not in the list of pages to delete, add it to the PdfWriter object
+        if page_num not in pages_to_delete:
+            pdf_writer.add_page(pdf_reader.pages[page_num])
+
+    # Write the remaining pages to the output file
+    with open(output_pdf, "wb") as output:
+        pdf_writer.write(output)
+
+# This function saves the remaining pages from multiple PDF files to a new PDF file
+def save_remaining_pages(pdf_files, output_pdf, pages_to_save):
+    """
+    Save remaining pages from multiple PDF files to a new PDF.
+
+    Parameters:
+    - pdf_files (str): A string containing paths to PDF files separated by ';'.
+    - output_pdf (str): The path to the output PDF file with saved pages.
+    - pages_to_save (list): A list of page numbers to save.
+
+    """
+    # Create a PdfWriter object
+    pdf_writer = PdfWriter()
+
+    # Loop through each PDF file
+    for pdf_file in pdf_files.split(";"):
+        # Open the PDF file
+        with open(pdf_file, 'rb') as file:
+            # Create a PdfReader object
+            pdf_reader = PdfReader(file)
+
+            # Loop through each page in the PDF file
+            for page_num in range(len(pdf_reader.pages)):
+                # If the page is not in the list of pages to save, add it to the PdfWriter object
+                if page_num not in pages_to_save:
+                    pdf_writer.add_page(pdf_reader.pages[page_num])
+
+    # Write the remaining pages to the oureaderput file
+    with open(output_pdf, 'wb') as output:
+        pdf_writer.write(output)
+        
+        
+def stitch_pdf(output_folder = "output", input_directory = "uploaded_files", document_name = None, pages_to_delete = [], remove_unstitched = False, renumber = False, file_reorder=[]):
+    """Merges, renumbers, and optionally cleans up a collection of PDF files.
+    Parameters:
+        output_folder (str): Path to the directory where the final PDF will be
+            saved. Defaults to "output".
+        input_directory (str): Path to the directory containing the input PDF
+            files to stitch. Defaults to "uploaded_files".
+        document_name (str, optional): Base name for the output PDF file
+            (without extension). If None, defaults to "<n>_stitched" where
+            <n> is the number of input files.
+        pages_to_delete (list[int]): List of page numbers to remove from the
+            merged PDF before saving. Defaults to [].
+        remove_unstitched (bool): If True, deletes the input directory and its
+            contents after stitching. Defaults to False.
+    Returns:
+        Stitched PDF
+    """
+    pdf_files = get_pdf_files(input_directory)
+    # if no document name is provided, default to a summary
+    if not document_name:
+        document_name = f"{len(pdf_files)}_stitched"
+    
+    temp_dir = os.path.join(output_folder, "temp")
+    os.makedirs(temp_dir, exist_ok=True)
+    merged_pdf = os.path.join(temp_dir, "merged.pdf")
+
+    # Merge the selected PDF files into a single PDF file
+    merge_pdfs(pdf_files, merged_pdf, file_reorder)
+    
+
+    # Define the final output path for the PDF file after deletion
+    final_output_pdf = os.path.join(output_folder, f"{document_name}.pdf")
+    
+    # Delete specified pages from the PDF file
+    delete_pages(merged_pdf, pages_to_delete, final_output_pdf)
+    
+
+    #  Renumber the pages of the merged PDF file
+    if renumber:
+        # # Define the path for the renumbered PDF file
+        renumbered_pdf = os.path.join(temp_dir, "renumbered.pdf")
+        renumber_pdf(final_output_pdf)
+    
+
+    # Remove the temporary directory and its contents
+    shutil.rmtree(temp_dir)
+    # Remove input files folder if specified
+    if remove_unstitched:
+        shutil.rmtree(input_directory) 
+    return final_output_pdf
+    
+# multi_stitch takes a directory of folders of separate pdfs to be stitched and outputs a zip containing each stitched pdf file.
+# TODO: give user more freedom for things like name and order of pdfs and stuff.
+def multi_stitch(meta_input_directory, output_folder = "output"):
+    # make temp folder
+    temp = os.path.join(output_folder, "multi_temp")
+    os.makedirs(temp, exist_ok=True)
+    
+    output_paths = []
+    for directory in os.scandir(meta_input_directory):
+        output_paths.append(stitch_pdf(output_folder=temp, input_directory=directory))
+    
+    zip_path = os.path.join(output_folder, "multi_stitched_pdfs")
+    zip_output = shutil.make_archive(base_name=zip_path,root_dir=output_folder,format="zip")
+    shutil.rmtree(temp) 
+    return zip_output
+
+# reorders a pdf given a list of indeces of the new order, ex.) [1,0,3,4,2]
+def reorder_pdf(pdf_path: str, new_order=[], output_directory=None):
+    if not pdf_path.endswith(".pdf"):
+        raise TypeError("File must be a PDF.")
+    if not output_directory:
+        output_directory = os.path.dirname(pdf_path)
+    
+    # Create a PdfWriter object
+    pdf_writer = PdfWriter()
+   
+    with open(pdf_path, 'rb') as file:
+        pdf_reader = PdfReader(file)
+
+        # exit if ordering/values are different length than the pdf
+        if not sorted(new_order) == list(range(len(pdf_reader.pages))):
+            print(new_order)
+            print(sorted(new_order))
+            raise ValueError("New order must be same length as pdf and have the same values.")
+        # Loop through each page in the PDF file
+        for i in new_order:
+            # Add the page to the PdfWriter object
+            pdf_writer.add_page(pdf_reader.pages[i])
+    new_pdf_name = f"reordered_{os.path.basename(file.name)}"
+    # Write the merged PDF file to the output file
+    with open(os.path.join(output_directory,new_pdf_name), 'wb') as output:
+        pdf_writer.write(output)
+
+# get info of a pdf. used for reordering.
+def get_pdf_info(file_path):
+    info = {}
+    try:
+        pdf_reader = PdfReader(file_path)
+        if len(pdf_reader.pages) == 0:
+            return None
+        metadata = pdf_reader.metadata or {}
+        info["fileName"] = os.path.basename(file_path)
+        info["numPages"] = len(pdf_reader.pages)
+        info["title"] = metadata.get("/Title", os.path.splitext(info["fileName"])[0])
+        info["width"] = pdf_reader.pages[0].mediabox.width
+        info["height"] = pdf_reader.pages[0].mediabox.height
+    except Exception:
+        return None
+    return info
+
+# moved this to a separate function since it's used more than once
+def get_pdf_files(directory_path):
+    pdf_files = []
+    # get all files from input directory
+    for file in os.listdir(directory_path):
+        if file.endswith(".pdf"):
+            pdf_files.append(os.path.join(directory_path, file))
+    return pdf_files
+
+def convert_to_pdf(file_path, delete_original = True):
+    file = Path(file_path)
+    suffix = file.suffix[1:]
+    
+    new_file_path = file.with_suffix(".pdf")
+    
+    if suffix == "pdf":
+        return file_path
+    
+    if suffix in ["docx","xlsx","csv","pptx"]:
+        with GotenbergClient("http://localhost:3000") as client:
+            with client.libre_office.to_pdf() as route:
+                response = route.convert(file).run()
+                response.to_file(new_file_path)
+    elif suffix in ["png","jpeg","jpg"]:
+        pdf = fitz.open()
+        # get dimensions of img
+        with Image.open(file) as img:
+            width, height = img.size
+            page = pdf.new_page(width=width,height=height)
+            page.insert_image((0,0,width,height),filename=file)
+        
+        pdf.set_metadata({"title": file.stem})
+        pdf.save(new_file_path)
+        pdf.close()
+        
+    # commented out because it doesn't work well
+    # elif suffix in ["mp4"]:
+    #    # make new pdf
+    #     pdf = fitz.open()
+    #     page = pdf.new_page()
+    
+    #     with open(file_path, "rb") as f:
+    #         video_data = f.read()
+    #         pdf.embfile_add(
+    #             file.name, 
+    #             video_data, 
+    #             None
+    #         )
+    #         file_annot = page.add_file_annot(
+    #         point=fitz.Point(100, 100),
+    #         buffer_=video_data,
+    #         filename=file.name,
+    #         icon="Paperclip"
+    #         )
+    #     file_annot.update()
+    #     pdf.save(new_file_path)
+    #     #     writer = PdfWriter()
+    #     # writer.add_blank_page(width=1920,height=1080)
+        
+    #     # with open(file_path, "rb") as f:
+    #     #     writer.add_attachment(file.stem, f.read())
+    #     # with open(new_file_path, "wb") as f:
+    #     #     writer.write(f)
+    if delete_original:
+        os.remove(file_path)
+    return new_file_path

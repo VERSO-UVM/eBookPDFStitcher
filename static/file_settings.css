@@ -1,0 +1,144 @@
+#flex-content {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap:10px;
+}
+
+#changing_form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+#pdf-viewer {
+  max-height: 90vh;
+  margin:10px;
+  align-self: flex-start;
+}
+
+h1 {
+  font-size: larger;
+  margin: 10px 0;
+}
+
+p {
+  margin: 6px 0;
+}
+
+#settings {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin: 10px;
+  max-width: 40vw;
+  gap: 10px;
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #15463321;
+  border-width: 2px;
+  border-color: #15463339;
+  border-style: solid;
+  border-radius: 10px;
+  padding: 6px;
+}
+
+#pdf-list {
+  max-height: 70vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-left: 0;
+  margin: 4px 0;
+}
+
+.pdf-li {
+  background-color: #629474;
+  margin: 3px;
+  border-radius: 8px;
+  padding: 8px;
+  color: white;
+  font-size: small;
+  gap: 8px;
+  display:flex;
+}
+
+details {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin: 2px;
+
+}
+
+.pdf-title {
+  overflow-x: auto;
+  white-space: nowrap;
+  font-style:italic;
+  padding-right: 4px;
+}
+
+.nested-ol {
+  max-height: 200px;
+  overflow-y:auto;
+  background-color: #D3D3D3;
+  padding-left:0;
+  border-radius: 4px;
+}
+
+.nested-li {
+  display: flex;
+  margin: 2px;
+  padding: 0 6px;
+  line-height: 12px;
+  background-color: #15463321;
+  justify-content: space-between;
+  color:#000000;
+  border-radius: 4px;
+}
+
+input[type="checkbox"] {
+  accent-color: red;
+}
+
+.option>p {
+  margin: 4px;
+  font-size: smaller;
+  font-style: italic;
+}
+
+#settings-buttons {
+  display: flex;
+  gap: 4px;
+  justify-content:center;
+}
+#reset {
+  display:none;
+}
+#delete-button {
+  display:none;
+  background-color: red;
+}
+
+#alert {
+  display: none;
+  color:red;
+  font-size:smaller;
+  font-style:italic;
+  margin: 6px;
+}
+
+#restart {
+  display: none;
+}

@@ -1,0 +1,44 @@
+type,section,description,"file name"
+Code,"Study 1","Mplus input code for Model 1","S1 model 2.inp"
+Code,"Study 1","Mplus input code for Model 1 constrained","S2 model 1 groups constrained.inp"
+Code,"Study 1","Mplus input code for Model 1 partially constrained","S2 model 1 groups partially constrained.inp"
+Code,"Study 1","Mplus input code for Model 1 unconstrained","S1 model 1 groups configural.inp"
+Code,"Study 1","Mplus input code for Model 2","S1 model 1.inp"
+Code,"Study 3","Mplus input code",S3.inp
+Codebook,"Study 1","SPSS datafile",S1.sav___CODEBOOK.csv
+Codebook,"Study 2","SPSS datafile",S2.sav___CODEBOOK.csv
+Codebook,"Study 3","SPSS datafile",S3.sav___CODEBOOK.csv
+Codebook,"Study 4","SPSS datafile",S4.sav___CODEBOOK.csv
+Data,"Study 1","SPSS datafile",S1.sav
+Data,"Study 2","SPSS datafile",S2.sav
+Data,"Study 3","SPSS datafile",S3.sav
+Data,"Study 4","SPSS datafile",S4.sav
+Materials,"Study 1","S1 Qualtrics survey",S1.pdf
+Materials,"Study 2","S2 Qualtrics survey","study 2.pdf"
+Materials,"Study 3","S3 Qualtrics survey","study 3.pdf"
+Materials,"Study 4","S4 Qualtrics survey pt1","S4 part1.pdf"
+Materials,"Study 4","S4 Qualtrics survey pt2","S4 part2.pdf"
+Other,"Study 1","Jamovi datafile + descriptives",S1.omv
+Other,"Study 1","Mplus datafile","S1 MPLUS.csv"
+Other,"Study 1","Mplus output for Model 1","S1 model 1.out"
+Other,"Study 1","Mplus output for Model 1 constrained","S2 model 1 groups constrained.out"
+Other,"Study 1","Mplus output for Model 1 partially constrained","S2 model 1 groups partially constrained.out"
+Other,"Study 1","Mplus output for Model 1 unconstrained","S1 model 1 groups configural.out"
+Other,"Study 1","Mplus output for Model 2","S1 model 2.out"
+Other,"Study 2","Jamovi - analyses",S2.omv
+Other,"Study 3","Jamovi - descriptives and manipulation check",S3.omv
+Other,"Study 3","Mplus datafile","S3 mplus.csv"
+Other,"Study 3","Mplus output",S3.out
+Other,"Study 4","Jamovi analyses",S4.omv
+Pre-Registration,"Study 1","AsPredicted #185458","Study 1 - AsPredicted #185458.pdf"
+Pre-Registration,"Study 2","AsPredicted #103236","Study 2 - AsPredicted #103236.pdf"
+Pre-Registration,"Study 3","AsPredicted #103927","Study 3 - AsPredicted #103927.pdf"
+Pre-Registration,"Study 4","AsPredicted #104428","Study 4 - AsPredicted #104428.pdf"
+
+
+"This zip file was created on Jan 13, 2026, at 04:55 (PST)."
+"At that time the box contained 35 files, of which 35 were included."
+
+
+"This ResearchBox is available from:"
+https://researchbox.org/1523
